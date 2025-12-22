@@ -1,0 +1,24 @@
+meta {
+  name: Register User
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/users/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name":"tazim",
+    "email":"tazim@gmail.com",
+    "password":"tazim"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

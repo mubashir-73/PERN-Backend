@@ -1,38 +1,32 @@
 import type { FastifyInstance } from "fastify";
-import { loginHandler, registerUserHandler } from "./user.controller.js";
-import { createUserSchema, createUserResponseSchema, loginResponseSchema, loginSchema } from "./user.schema.js";
-import { authGuard } from "../../auth/auth.js";
-import { log } from "console";
+import { getUsersHandler } from "./user.controller.js";
+import { adminGuard } from "../../auth/auth.js";
 
 async function userRoutes(server: FastifyInstance) {
-  server.post(
-    "/register",
+  server.get(
+    "/list",
     {
+      onRequest: [adminGuard],
       schema: {
-        body: createUserSchema,
         response: {
-          201: createUserResponseSchema,
+          200: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: { type: "number" },
+                email: { type: "string" },
+                name: { type: "string" },
+                role: { enum: ["ADMIN", "STUDENT"] },
+                createdAt: { type: "string" }
+              }
+            }
+          },
         },
       },
     },
-    registerUserHandler,
+    getUsersHandler,
   );
-
-  server.post(
-  "/login",
-  {
-    schema: {
-      body: loginSchema,
-      response:{
-        200:loginResponseSchema
-      },
-  }
-},
-loginHandler,
-);
 }
-
-
-
 
 export default userRoutes;

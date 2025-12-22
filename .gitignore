@@ -2,6 +2,9 @@ node_modules
 # Keep environment variables out of version control
 .env
 
+# Google OAuth client secrets
+client_secret_*.json
+
 /src/generated/prisma
 
 /src/generated/prisma

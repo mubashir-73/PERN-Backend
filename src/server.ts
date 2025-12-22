@@ -1,7 +1,8 @@
 // Import the framework and instantiate it
 import "dotenv/config";
 import Fastify from "fastify";
-import userRoutes from "../src/modules/user/user.route.js";
+import userRoutes from "./modules/user/user.route.js";
+import oauthRoutes from "./auth/oauth.route.js";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import {
   serializerCompiler,
@@ -9,25 +10,30 @@ import {
 } from "fastify-type-provider-zod";
 import fastifyJwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
-import { fa } from "zod/locales";
+import { authGuard, adminGuard } from "./auth/auth.js";
 
 const server = Fastify().withTypeProvider<ZodTypeProvider>();
 server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
+await server.register(fastifyCookie);
 
 await server.register(fastifyJwt, {
   secret: process.env.JWT_SECRET!,
+  cookie: {
+    cookieName: "access_token",
+    signed: false,
+  },
 });
 
-await server.register(fastifyCookie,{
-  secret: process.env.COOKIE_SECRET!,
-});
+server.decorate("authGuard", authGuard);
+server.decorate("adminGuard", adminGuard);
 // Declare a route
-server.get("/", async function handler(request, reply) {
+server.get("/", async function handler() {
   return { hello: "world" };
 });
 
-await server.register(userRoutes, { prefix: "api/users" });
+await server.register(userRoutes, { prefix: "/api/users" });
+await server.register(oauthRoutes);
 
 // Run the server!
 try {

@@ -12,12 +12,26 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UserRole {
+  ADMIN
+  STUDENT
+}
+
+enum OAuthProvider {
+  GOOGLE
+}
+
 model User {
-id Int @id @default(autoincrement())
-email String @unique
-name String?
-password String
-products Product[]
+  id        Int          @id @default(autoincrement())
+  email     String       @unique
+  name      String?
+  role      UserRole     @default(STUDENT)
+  provider  OAuthProvider?
+  googleId  String?      @unique
+  password  String?      // Make optional for OAuth users
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @default(now())
+  products Product[]
 }
 
 model Product {

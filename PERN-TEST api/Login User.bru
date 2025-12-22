@@ -1,0 +1,23 @@
+meta {
+  name: Login User
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/api/users/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email":"tazim@gmail.com",
+    "password":"tazim"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

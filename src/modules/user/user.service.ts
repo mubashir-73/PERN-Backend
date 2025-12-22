@@ -1,30 +1,45 @@
-import { hashPassword, verifyPassword } from "../../utils/hash.js";
 import prisma from "../../utils/prisma.js";
-import type { CreateUserInput, LoginInput } from "./user.schema.ts";
 
-export async function createUser(input: CreateUserInput) {
-  const { password, ...rest } = input;
-
-  const passwordHash = await hashPassword(password);
-
-  const user = await prisma.user.create({
-    data: { ...rest, password: passwordHash },
+export async function getAllUsers() {
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true
+    }
   });
-  return user;
+  
+  if (!users) return null;
+  
+  return users;
 }
 
-export async function loginUser(input: LoginInput) {
-  const { email, password } = input;
-
-  const user = await prisma.user.findUnique({
-    where: { email },
+export async function getUserById(id: number) {
+  return await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true
+    }
   });
+}
 
-  if (!user) return null;
-
-  const valid = await verifyPassword(password, user.password);
-
-  if (!valid) return null;
-
-  return user;
+export async function getUserByEmail(email: string) {
+  return await prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      createdAt: true,
+      provider: true,
+      googleId: true
+    }
+  });
 }
