@@ -16,7 +16,6 @@ const server = Fastify().withTypeProvider<ZodTypeProvider>();
 server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
 await server.register(fastifyCookie);
-
 await server.register(fastifyJwt, {
   secret: process.env.JWT_SECRET!,
   cookie: {

@@ -5,5 +5,14 @@ export const getUserSchema = z.object({
   email: z.string(),
   name: z.string().optional(),
   role: z.enum(["ADMIN", "STUDENT"]),
-  createdAt: z.string()
+  createdAt: z.string(),
 });
+
+export const userTokenSchema = z.object({
+  id: z.number(),
+  email: z.string(),
+  role: z.enum(["ADMIN", "STUDENT"]),
+});
+
+export type UserTokenPayload = z.infer<typeof userTokenSchema>;
+

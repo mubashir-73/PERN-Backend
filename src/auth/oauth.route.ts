@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import fastifyOauth2 from "@fastify/oauth2";
-import { handleOAuthCallback, generateStateToken } from "../utils/oauth.js";
+import { handleOAuthCallback } from "../utils/oauth.js";
 
 interface GoogleProfile {
   id: string;
@@ -25,72 +25,73 @@ async function oauthRoutes(server: FastifyInstance) {
         tokenPath: "/token",
       },
     },
-    // Don't set startRedirectPath - we'll handle it manually
-    callbackUri: process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback",
+    // Let the plugin create the redirect route which handles state for us
+    startRedirectPath: "/auth/google",
+    callbackUri:
+      process.env.GOOGLE_CALLBACK_URL ||
+      "http://localhost:3000/auth/google/callback",
     scope: ["email", "profile"],
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
   });
 
-  // Custom Google OAuth route with state management
-  server.get("/auth/google", async (request: FastifyRequest, reply: FastifyReply) => {
-    const clientId = process.env.GOOGLE_CLIENT_ID!;
-    const redirectUri = process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback";
-    
-    // Build Google OAuth URL manually - let OAuth plugin handle state
-    const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
-    authUrl.searchParams.append("client_id", clientId);
-    authUrl.searchParams.append("redirect_uri", redirectUri);
-    authUrl.searchParams.append("response_type", "code");
-    authUrl.searchParams.append("scope", "email profile");
-    authUrl.searchParams.append("hd", "svce.ac.in"); // Domain restriction
-    authUrl.searchParams.append("access_type", "offline");
-    authUrl.searchParams.append("prompt", "consent");
+  server.get(
+    "/auth/google/callback",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const googleOAuth = (server as any).googleOAuth2;
 
-    console.log("Redirecting to Google OAuth:", authUrl.toString());
-    
-    return reply.redirect(authUrl.toString());
-  });
+        // Exchange code for tokens
+        const result = await googleOAuth.getAccessTokenFromAuthorizationCodeFlow(
+          request
+        );
 
-  server.get("/auth/google/callback", async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      // Get state from OAuth plugin's cookie
-      const storedState = request.cookies['oauth2-redirect-state'];
-      const query = request.query as { state?: string };
-      const { state } = query;
+        const accessToken = result.token.access_token as string;
 
-      console.log("OAuth callback:", {
-        storedState,
-        state: query.state,
-        allCookies: request.cookies
-      });
+        if (!accessToken) {
+          return reply.code(400).send({ message: 'No access token received' });
+        }
 
-      if (!state || state !== storedState) {
-        console.error("State mismatch:", { state, storedState });
-        return reply.code(400).send({ message: "Invalid state parameter" });
+        // Clear the state cookie set by the plugin
+        reply.clearCookie('oauth2-redirect-state');
+
+        // Fetch Google profile
+        const fetchResult = await fetch(
+          'https://www.googleapis.com/oauth2/v2/userinfo',
+          {
+            headers: {
+              Authorization: 'Bearer ' + accessToken,
+            },
+          },
+        );
+
+        if (!fetchResult.ok) {
+          return reply.code(400).send({ message: 'Failed to fetch user info' });
+        }
+
+        const profile = (await fetchResult.json()) as GoogleProfile;
+
+        return handleOAuthCallback(server, reply, profile);
+      } catch (error) {
+        console.error('OAuth callback error:', error);
+        return reply.code(400).send({
+          message: 'OAuth authentication failed',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
       }
+    },
+  );
 
-      // Clear OAuth plugin's state cookie
-      reply.clearCookie("oauth2-redirect-state");
-
-      const googleOAuth = (server as any).googleOAuth2;
-      const token = await googleOAuth.getAccessTokenFromAuthorizationCodeFlow(request);
-      const profile = token.get() as GoogleProfile;
-
-      console.log("Google profile:", profile);
-
-      return handleOAuthCallback(server, reply, profile);
-    } catch (error) {
-      console.error("OAuth callback error:", error);
-      return reply.code(400).send({ 
-        message: "OAuth authentication failed",
-        error: error instanceof Error ? error.message : "Unknown error"
-      });
-    }
-  });
-
-  server.post("/auth/logout", async (_request: FastifyRequest, reply: FastifyReply) => {
-    reply.clearCookie("access_token");
-    return reply.code(200).send({ message: "Logged out successfully" });
-  });
+  server.post(
+    "/auth/logout",
+    async (_request: FastifyRequest, reply: FastifyReply) => {
+      reply.clearCookie("access_token");
+      return reply.code(200).send({ message: "Logged out successfully" });
+    },
+  );
 }
 
 export default oauthRoutes;
+
