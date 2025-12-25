@@ -14,7 +14,7 @@ export async function getUsersHandler(
 
     return reply.code(200).send(users);
   } catch (error) {
-    console.error('Error getting users:', error);
+    console.error("Error getting users:", error);
     return reply.code(500).send({ message: "Internal server error" });
   }
 }

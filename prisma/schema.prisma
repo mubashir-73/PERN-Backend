@@ -22,25 +22,74 @@ enum OAuthProvider {
 }
 
 model User {
-  id        Int          @id @default(autoincrement())
-  email     String       @unique
-  name      String?
-  role      UserRole     @default(STUDENT)
-  provider  OAuthProvider?
-  googleId  String?      @unique
-  password  String?      // Make optional for OAuth users
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @default(now())
-  products Product[]
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  name         String?
+  role         UserRole       @default(STUDENT)
+  provider     OAuthProvider?
+  googleId     String?        @unique
+  password     String? // Make optional for OAuth users
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  testSessions TestSession[]
 }
 
-model Product {
-id Int @id @default(autoincrement())
-createAt DateTime @default(now())
-updatedAt DateTime @updatedAt
-title String @db.VarChar(255)
-content String?
-price Float
-owner User @relation(fields: [ownerId], references: [id])
-ownerId Int
+model TestSession {
+  id     Int  @id @default(autoincrement())
+  UserId Int
+  user   User @relation(fields: [UserId], references: [id])
+
+  StartedAt   DateTime              @default(now())
+  CompletedAt DateTime?
+  questions   TestSessionQuestion[]
 }
+
+model TestSessionQuestion {
+  sessionId  Int
+  questionId Int
+  order      Int
+
+  session  TestSession @relation(fields: [sessionId], references: [id])
+  question Question    @relation(fields: [questionId], references: [id])
+
+  @@id([sessionId, questionId])
+}
+
+model Comprehension {
+  id        Int        @id @default(autoincrement())
+  passage   String
+  questions Question[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Question {
+  id          Int     @id @default(autoincrement())
+  category    String
+  subCategory String?
+  question    String
+  image       String?
+
+  comprehensionId Int?
+  comprehension   Comprehension? @relation(fields: [comprehensionId], references: [id])
+
+  options         Option[]
+  correctOptionId Int
+
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @default(now())
+  testSessionQuestions TestSessionQuestion[]
+}
+
+model Option {
+  id         Int      @id @default(autoincrement())
+  questionId Int
+  text       String
+  question   Question @relation(fields: [questionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+//TODO: Use ZOD for validation of these options. 
