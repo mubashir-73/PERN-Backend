@@ -1,11 +1,26 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const getUserSchema = z.object({
+  //admin needs to be able to see all users
   id: z.number(),
   email: z.string(),
   name: z.string().optional(),
   role: z.enum(["ADMIN", "STUDENT"]),
   createdAt: z.string(),
+});
+
+export const CreateUserSchema = z.object({
+  // for registering those bitches
+  email: z.string(),
+  name: z.string(),
+  password: z.string(),
+});
+
+export const CreateUserResponseSchema = z.object({
+  // for responding
+  id: z.number(),
+  email: z.string(),
+  name: z.string(),
 });
 
 export const userTokenSchema = z.object({
@@ -14,9 +29,17 @@ export const userTokenSchema = z.object({
   role: z.enum(["ADMIN", "STUDENT"]),
 });
 
-export type UserTokenPayload = z.infer<typeof userTokenSchema>;
+export const loginSchema = z.object({
+  //I GOT LAZY CREATING THESE SCHEMAS, will have to make a login response schema in future
+  email: z.string(),
+  password: z.string(),
+});
 
-//TODO: Add schema for user update
+export type LoginPayload = z.infer<typeof loginSchema>;
+export type UserTokenPayload = z.infer<typeof userTokenSchema>;
+export type CreateUserPayload = z.infer<typeof CreateUserSchema>;
+
+//TODO: Add login response schema
 
 /* Aptitude
 points: { type: Number, required: true, min: 0, max: 50 },

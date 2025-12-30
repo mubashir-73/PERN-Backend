@@ -3,6 +3,8 @@ import "dotenv/config";
 import Fastify from "fastify";
 import userRoutes from "./modules/user/user.route.js";
 import oauthRoutes from "./auth/oauth.route.js";
+import questionsRoutes from "./modules/questions/questions.route.js";
+import bcryptPlugin from "./plugins/bcrypt.ts";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import {
   serializerCompiler,
@@ -11,7 +13,7 @@ import {
 import fastifyJwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
 import { authGuard, adminGuard } from "./auth/auth.js";
-
+import type { FastifyPluginAsync } from "fastify";
 const server = Fastify().withTypeProvider<ZodTypeProvider>();
 server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
@@ -23,9 +25,11 @@ await server.register(fastifyJwt, {
     signed: false,
   },
 });
+await server.register(bcryptPlugin);
 
 server.decorate("authGuard", authGuard);
 server.decorate("adminGuard", adminGuard);
+
 // Declare a route
 server.get("/", async function handler() {
   return { hello: "world" };
@@ -33,6 +37,7 @@ server.get("/", async function handler() {
 
 await server.register(userRoutes, { prefix: "/api/users" });
 await server.register(oauthRoutes);
+await server.register(questionsRoutes, { prefix: "/api/questions" });
 
 // Run the server!
 try {

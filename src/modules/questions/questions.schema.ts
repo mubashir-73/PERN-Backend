@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const optionSchema = z.object({
   id: z.number(),
@@ -33,4 +33,23 @@ export const comprehensionSchema = z.object({
   id: z.number(),
   passage: z.string(),
   questions: z.array(questionSchema),
+});
+
+// Request schemas
+export const createTestSessionRequestSchema = z.object({});
+
+// Response schemas
+export const testSessionResponseSchema = testSessionSchema.extend({
+  questions: z.array(
+    questionSchema.extend({
+      options: z.array(optionSchema),
+      passage: z.string().optional(),
+      order: z.number(),
+    }),
+  ),
+});
+
+export const activeSessionConflictSchema = z.object({
+  message: z.literal("Active session already exists"),
+  sessionId: z.number(),
 });
