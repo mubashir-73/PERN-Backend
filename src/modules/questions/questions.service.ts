@@ -4,7 +4,9 @@ export async function getActiveSessionByUserId(userId: number) {
   return await prisma.testSession.findFirst({
     where: {
       UserId: userId,
-      CompletedAt: null,
+      ExpiresAt: {
+        gt: new Date(), // Greater than current time (not expired)
+      },
     },
     include: {
       questions: {
@@ -19,6 +21,26 @@ export async function getActiveSessionByUserId(userId: number) {
   });
 }
 
+//Check for an active session conflict or User is already done with their session
+export async function checkForActiveSessionConflict(userId: number) {
+  try {
+    const activeSession = await prisma.testSession.findFirst({
+      where: {
+        UserId: userId,
+        CompletedAt: null, // Session is not completed
+        ExpiresAt: {
+          gt: new Date(), // AND not expired
+        },
+      },
+    });
+
+    return activeSession;
+  } catch (error) {
+    console.error("Error checking for active session conflict:", error);
+    return null;
+  }
+}
+
 export async function createTestSession(userId: number) {
   const distribution = {
     Aptitude: 10,
@@ -29,11 +51,14 @@ export async function createTestSession(userId: number) {
   };
 
   try {
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 3);
     return await prisma.$transaction(async (tx) => {
       // Create the session
       const session = await tx.testSession.create({
         data: {
           UserId: userId,
+          ExpiresAt: expiresAt,
         },
       });
 
@@ -115,4 +140,3 @@ export async function getTestSessionById(sessionId: number, userId: number) {
     },
   });
 }
-

@@ -36,7 +36,10 @@ export const comprehensionSchema = z.object({
 });
 
 // Request schemas
-export const createTestSessionRequestSchema = z.object({});
+export const createTestSessionRequestSchema = z.object({
+  UserId: z.number(),
+  ExpiresAt: z.date(),
+});
 
 // Response schemas
 export const testSessionResponseSchema = testSessionSchema.extend({

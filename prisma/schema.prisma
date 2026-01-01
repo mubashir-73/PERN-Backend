@@ -41,6 +41,7 @@ model TestSession {
 
   StartedAt   DateTime              @default(now())
   CompletedAt DateTime?
+  ExpiresAt   DateTime              @default(now())
   questions   TestSessionQuestion[]
 }
 

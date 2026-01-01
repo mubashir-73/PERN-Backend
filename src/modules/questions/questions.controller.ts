@@ -1,5 +1,9 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { createTestSession, getTestSessionById } from "./questions.service.js";
+import {
+  createTestSession,
+  getTestSessionById,
+  checkForActiveSessionConflict,
+} from "./questions.service.js";
 import type { UserTokenPayload } from "../user/user.schema.js";
 
 export async function createTestSessionHandler(
@@ -9,7 +13,13 @@ export async function createTestSessionHandler(
   try {
     const user = await request.jwtVerify<UserTokenPayload>();
     const userId = user.id;
-
+    const isActive = await checkForActiveSessionConflict(userId);
+    if (isActive) {
+      console.log("User already has an active session");
+      return reply
+        .code(409)
+        .send({ message: "User already has an active session" });
+    }
     console.log("Creating test session for user:", userId);
 
     const session = await createTestSession(userId);
