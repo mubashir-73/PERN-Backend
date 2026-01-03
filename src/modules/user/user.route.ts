@@ -45,6 +45,7 @@ async function userRoutes(server: FastifyInstance) {
               id: { type: "number" },
               email: { type: "string" },
               name: { type: "string" },
+              role: { enum: ["BUILDER", "STUDENT"] }, //This will be set by the api call based on interface in frontend
             },
           },
         },

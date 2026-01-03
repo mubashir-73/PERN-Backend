@@ -1,0 +1,33 @@
+meta {
+  name: Upload a Question
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:3000/api/questions/questionsUpload
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "regular",
+    "category": "Mathematics",
+    "subCategory": "Algebra",
+    "question": "If 3x + 5 = 20, what is the value of x?",
+    "image": "https://example.com/images/algebra-question-1.png",
+    "correctOptionId": 2,
+    "options": [
+      { "text": "3" },
+      { "text": "5" },
+      { "text": "7" },
+      { "text": "10" }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

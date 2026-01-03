@@ -1,10 +1,24 @@
+import {
+  questionUploadSchema,
+  bulkQuestionUploadSchema,
+  type BulkQuestionUploadPayload,
+  type QuestionUploadPayload,
+} from "./questions.schema.js";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import {
   createTestSession,
   getTestSessionById,
   checkForActiveSessionConflict,
+  InsertQuestion,
+  InsertBulkQuestions,
 } from "./questions.service.js";
+import {
+  type QuestionPayload,
+  type OptionPayload,
+  questionSchema,
+} from "./questions.schema.js";
 import type { UserTokenPayload } from "../user/user.schema.js";
+import z from "zod";
 
 export async function createTestSessionHandler(
   request: FastifyRequest,
@@ -68,5 +82,63 @@ export async function getTestSessionHandler(
       message: "Internal server error",
       error: error instanceof Error ? error.message : "unknown error",
     });
+  }
+}
+
+export async function UploadQuestionsHandler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  try {
+    const questionData = request.body;
+    const validatedQuestion = questionUploadSchema.parse(questionData);
+
+    const result = await InsertQuestion(validatedQuestion);
+
+    return reply.send({
+      success: true,
+      data: result,
+      type: validatedQuestion.type,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return reply.status(400).send({
+        error: "Validation failed",
+        details: error.errors,
+      });
+    }
+    console.error("Error uploading question:", error);
+    return reply.status(500).send({ error: "Internal server error" });
+  }
+}
+
+export async function BulkUploadQuestionsHandler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  try {
+    const bulkData = request.body;
+    const validatedBulk = bulkQuestionUploadSchema.parse(bulkData);
+
+    const results = await InsertBulkQuestions(validatedBulk);
+
+    return reply.send({
+      success: true,
+      data: results,
+      summary: {
+        total: results.length,
+        regular: results.filter((r) => r.type === "regular").length,
+        comprehension: results.filter((r) => r.type === "comprehension").length,
+      },
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return reply.status(400).send({
+        error: "Validation failed",
+        details: error.errors,
+      });
+    }
+    console.error("Error bulk uploading questions:", error);
+    return reply.status(500).send({ error: "Internal server error" });
   }
 }

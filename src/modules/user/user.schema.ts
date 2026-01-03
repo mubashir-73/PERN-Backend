@@ -14,6 +14,7 @@ export const CreateUserSchema = z.object({
   email: z.string(),
   name: z.string(),
   password: z.string(),
+  role: z.enum(["BUILDER", "STUDENT", "ADMIN"]),
 });
 
 export const CreateUserResponseSchema = z.object({
@@ -26,7 +27,7 @@ export const CreateUserResponseSchema = z.object({
 export const userTokenSchema = z.object({
   id: z.number(),
   email: z.string(),
-  role: z.enum(["ADMIN", "STUDENT"]),
+  role: z.enum(["ADMIN", "STUDENT", "BUILDER"]),
 });
 
 export const loginSchema = z.object({

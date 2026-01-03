@@ -1,0 +1,116 @@
+meta {
+  name: Bulk Upload Questions
+  type: http
+  seq: 8
+}
+
+post {
+  url: http://localhost:3000/api/questions/questionsBulkUpload
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "questions": [
+      {
+        "type": "regular",
+        "category": "Mathematics",
+        "subCategory": "Algebra",
+        "question": "What is 2 + 2?",
+        "correctOptionId": 2,
+        "options": [
+          { "text": "3" },
+          { "text": "4" },
+          { "text": "5" },
+          { "text": "6" }
+        ]
+      },
+      {
+        "type": "regular",
+        "category": "Science",
+        "question": "What is H2O?",
+        "correctOptionId": 1,
+        "options": [
+          { "text": "Water" },
+          { "text": "Hydrogen" },
+          { "text": "Oxygen" },
+          { "text": "Helium" }
+        ]
+      },
+      {
+        "type": "comprehension",
+        "comprehension": {
+          "passage": "The solar system consists of the Sun and everything that orbits around it...",
+          "questions": [
+            {
+              "category": "Reading Comprehension",
+              "question": "What is at the center of our solar system?",
+              "correctOptionId": 1,
+              "options": [
+                { "text": "The Sun" },
+                { "text": "The Earth" },
+                { "text": "The Moon" },
+                { "text": "Jupiter" },
+                { "text": "Mars" }
+              ]
+            },
+            {
+              "category": "Reading Comprehension",
+              "question": "How many planets orbit the Sun?",
+              "correctOptionId": 4,
+              "options": [
+                { "text": "6 planets" },
+                { "text": "7 planets" },
+                { "text": "9 planets" },
+                { "text": "8 planets" },
+                { "text": "10 planets" }
+              ]
+            },
+            {
+              "category": "Reading Comprehension",
+              "question": "Which planet is closest to the Sun?",
+              "correctOptionId": 1,
+              "options": [
+                { "text": "Mercury" },
+                { "text": "Venus" },
+                { "text": "Earth" },
+                { "text": "Mars" },
+                { "text": "Jupiter" }
+              ]
+            },
+            {
+              "category": "Reading Comprehension",
+              "question": "What orbits around the Sun?",
+              "correctOptionId": 5,
+              "options": [
+                { "text": "Only planets" },
+                { "text": "Only asteroids" },
+                { "text": "Only comets" },
+                { "text": "Planets and moons" },
+                { "text": "Everything in the solar system" }
+              ]
+            },
+            {
+              "category": "Reading Comprehension",
+              "question": "Which is the largest planet?",
+              "correctOptionId": 2,
+              "options": [
+                { "text": "Saturn" },
+                { "text": "Jupiter" },
+                { "text": "Neptune" },
+                { "text": "Uranus" },
+                { "text": "Earth" }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,92 @@
+meta {
+  name: Upload a Comprehension
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:3000/api/questions/questionsUpload
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "comprehension",
+    "comprehension": {
+      "passage": "The Amazon rainforest, often referred to as the 'lungs of the Earth,' spans across nine countries in South America, with the majority located in Brazil. This vast ecosystem is home to approximately 10% of all species on Earth, including over 40,000 plant species, 1,300 bird species, and 3,000 types of fish. The rainforest plays a crucial role in regulating the global climate by absorbing massive amounts of carbon dioxide and releasing oxygen. However, deforestation has become a major concern, with an estimated 17% of the forest lost in the last 50 years due to logging, agriculture, and urban development. Scientists warn that continued deforestation could have devastating effects on global weather patterns and biodiversity.",
+      "questions": [
+        {
+          "category": "Reading Comprehension",
+          "subCategory": "Main Ideas",
+          "question": "What percentage of Earth's species are found in the Amazon rainforest?",
+          "correctOptionId": 2,
+          "options": [
+            { "text": "5%" },
+            { "text": "10%" },
+            { "text": "15%" },
+            { "text": "20%" },
+            { "text": "25%" }
+          ]
+        },
+        {
+          "category": "Reading Comprehension",
+          "subCategory": "Details",
+          "question": "How many bird species are found in the Amazon rainforest according to the passage?",
+          "correctOptionId": 3,
+          "options": [
+            { "text": "Over 1,000 species" },
+            { "text": "About 1,200 species" },
+            { "text": "Over 1,300 species" },
+            { "text": "Around 3,000 species" },
+            { "text": "Over 40,000 species" }
+          ]
+        },
+        {
+          "category": "Reading Comprehension",
+          "subCategory": "Inference",
+          "question": "Why is the Amazon rainforest called the 'lungs of the Earth'?",
+          "correctOptionId": 1,
+          "options": [
+            { "text": "It absorbs carbon dioxide and releases oxygen" },
+            { "text": "It covers a large area of the planet" },
+            { "text": "It has the most animals on Earth" },
+            { "text": "It produces rain for the entire world" },
+            { "text": "It is the oldest forest in the world" }
+          ]
+        },
+        {
+          "category": "Reading Comprehension",
+          "subCategory": "Details",
+          "question": "What percentage of the Amazon rainforest has been lost in the last 50 years?",
+          "correctOptionId": 4,
+          "options": [
+            { "text": "10%" },
+            { "text": "12%" },
+            { "text": "15%" },
+            { "text": "17%" },
+            { "text": "20%" }
+          ]
+        },
+        {
+          "category": "Reading Comprehension",
+          "subCategory": "Cause and Effect",
+          "question": "According to the passage, what are the main causes of deforestation in the Amazon?",
+          "correctOptionId": 2,
+          "options": [
+            { "text": "Climate change, fires, and natural disasters" },
+            { "text": "Logging, agriculture, and urban development" },
+            { "text": "Mining, tourism, and pollution" },
+            { "text": "Hunting, fishing, and road construction" },
+            { "text": "Drought, flooding, and disease" }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
