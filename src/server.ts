@@ -13,7 +13,8 @@ import {
 import fastifyJwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
 import { authGuard, adminGuard } from "./auth/auth.js";
-import type { FastifyPluginAsync } from "fastify";
+import resultRoutes from "./modules/results/results.route.js";
+
 const server = Fastify().withTypeProvider<ZodTypeProvider>();
 server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
@@ -38,6 +39,7 @@ server.get("/", async function handler() {
 await server.register(userRoutes, { prefix: "/api/users" });
 await server.register(oauthRoutes);
 await server.register(questionsRoutes, { prefix: "/api/questions" });
+await server.register(resultRoutes, { prefix: "/api/results" });
 
 // Run the server!
 try {

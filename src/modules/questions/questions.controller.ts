@@ -12,11 +12,6 @@ import {
   InsertQuestion,
   InsertBulkQuestions,
 } from "./questions.service.js";
-import {
-  type QuestionPayload,
-  type OptionPayload,
-  questionSchema,
-} from "./questions.schema.js";
 import type { UserTokenPayload } from "../user/user.schema.js";
 import z from "zod";
 

@@ -1,0 +1,74 @@
+meta {
+  name: Submit Results to server
+  type: http
+  seq: 9
+}
+
+post {
+  url: http://localhost:3000/api/results/submit
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "sessionId": 14,
+    "answers": [
+      { "questionId": 80, "optionId": 1 },
+      { "questionId": 81, "optionId": 1 },
+      { "questionId": 82, "optionId": 1 },
+      { "questionId": 83, "optionId": 3 },
+      { "questionId": 84, "optionId": 1 },
+      { "questionId": 85, "optionId": 1 },
+      { "questionId": 86, "optionId": 1 },
+      { "questionId": 87, "optionId": 1 },
+      { "questionId": 88, "optionId": 3 },
+      { "questionId": 89, "optionId": 1 },
+      { "questionId": 90, "optionId": 2 },
+      { "questionId": 91, "optionId": 3 },
+      { "questionId": 92, "optionId": 2 },
+      { "questionId": 93, "optionId": 1 },
+      { "questionId": 94, "optionId": 1 },
+      { "questionId": 70, "optionId": 2 },
+      { "questionId": 71, "optionId": 3 },
+      { "questionId": 72, "optionId": 3 },
+      { "questionId": 73, "optionId": 2 },
+      { "questionId": 74, "optionId": 2 },
+      { "questionId": 95, "optionId": 2 },
+      { "questionId": 96, "optionId": 2 },
+      { "questionId": 97, "optionId": 1 },
+      { "questionId": 98, "optionId": 3 },
+      { "questionId": 99, "optionId": 1 },
+      { "questionId": 100, "optionId": 2 },
+      { "questionId": 101, "optionId": 3 },
+      { "questionId": 102, "optionId": 3 },
+      { "questionId": 103, "optionId": 2 },
+      { "questionId": 104, "optionId": 3 },
+      { "questionId": 105, "optionId": 3 },
+      { "questionId": 106, "optionId": 3 },
+      { "questionId": 107, "optionId": 3 },
+      { "questionId": 108, "optionId": 2 },
+      { "questionId": 109, "optionId": 1 },
+      { "questionId": 110, "optionId": 2 },
+      { "questionId": 111, "optionId": 3 },
+      { "questionId": 112, "optionId": 1 },
+      { "questionId": 113, "optionId": 2 },
+      { "questionId": 114, "optionId": 3 },
+      { "questionId": 115, "optionId": 3 },
+      { "questionId": 116, "optionId": 2 },
+      { "questionId": 117, "optionId": 3 },
+      { "questionId": 118, "optionId": 1 },
+      { "questionId": 119, "optionId": 2 },
+      { "questionId": 120, "optionId": 2 },
+      { "questionId": 121, "optionId": 1 },
+      { "questionId": 122, "optionId": 2 },
+      { "questionId": 123, "optionId": 1 },
+      { "questionId": 124, "optionId": 2 }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -26,6 +26,8 @@ model User {
   id           Int            @id @default(autoincrement())
   email        String         @unique
   name         String?
+  regNo        String?
+  dept         String?
   role         UserRole       @default(STUDENT)
   provider     OAuthProvider?
   googleId     String?        @unique
@@ -33,6 +35,7 @@ model User {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @default(now())
   testSessions TestSession[]
+  results      Result[]
 }
 
 model TestSession {
@@ -44,6 +47,7 @@ model TestSession {
   CompletedAt DateTime?
   ExpiresAt   DateTime              @default(now())
   questions   TestSessionQuestion[]
+  result      Result?
 }
 
 model TestSessionQuestion {
@@ -55,6 +59,28 @@ model TestSessionQuestion {
   question Question    @relation(fields: [questionId], references: [id])
 
   @@id([sessionId, questionId])
+}
+
+model Result {
+  id        Int         @id @default(autoincrement())
+  userId    Int
+  sessionId Int         @unique // One result per session
+  user      User        @relation(fields: [userId], references: [id])
+  session   TestSession @relation(fields: [sessionId], references: [id])
+
+  // Score fields
+  totalPoints   Int @default(0) // 0-50
+  aptitude      Int @default(0) // 0-10
+  core          Int @default(0) // 0-20
+  verbal        Int @default(0) // 0-5
+  programming   Int @default(0) // 0-10
+  comprehension Int @default(0) // 0-5
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([sessionId])
 }
 
 model Comprehension {
@@ -92,6 +118,18 @@ model Option {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+}
+
+model Answer {
+  id         Int      @id @default(autoincrement())
+  sessionId  Int
+  questionId Int
+  optionId   Int // The option selected by the user
+  isCorrect  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@unique([sessionId, questionId]) // One answer per question per session
+  @@index([sessionId])
 }
 
 //TODO: Use ZOD for validation of these options. 
