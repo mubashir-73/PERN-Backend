@@ -231,103 +231,103 @@ async function main() {
 
     // Core Questions (20)
     {
-      category: "Core",
+      category: "CS",
       question: "What is the time complexity of binary search?",
       correctOptionId: 2,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "Which data structure uses LIFO principle?",
       correctOptionId: 2,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is the purpose of an operating system?",
       correctOptionId: 1,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "Which protocol is used for secure web browsing?",
       correctOptionId: 3,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is normalization in database design?",
       correctOptionId: 1,
     },
     {
-      category: "Core",
+      category: "CS",
       question:
         "Which sorting algorithm has O(n log n) average time complexity?",
       correctOptionId: 2,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is the difference between TCP and UDP?",
       correctOptionId: 3,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is a deadlock in operating systems?",
       correctOptionId: 3,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "Which OSI layer handles routing?",
       correctOptionId: 2,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is the purpose of virtual memory?",
       correctOptionId: 3,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "Which data structure is best for implementing priority queue?",
       correctOptionId: 3,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is the difference between process and thread?",
       correctOptionId: 3,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "Which database model represents many-to-many relationships?",
       correctOptionId: 3,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is the purpose of DNS in networking?",
       correctOptionId: 2,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "Which algorithm is used for finding shortest path in graphs?",
       correctOptionId: 1,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is the difference between primary and secondary memory?",
       correctOptionId: 2,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "Which OSI layer provides end-to-end communication?",
       correctOptionId: 3,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is the purpose of cache memory?",
       correctOptionId: 1,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "Which data structure is used for implementing recursion?",
       correctOptionId: 2,
     },
     {
-      category: "Core",
+      category: "CS",
       question: "What is the difference between compiler and interpreter?",
       correctOptionId: 3,
     },
@@ -434,7 +434,7 @@ async function main() {
           optionData.push({ questionId: q.id, text });
         });
       }
-    } else if (q.category === "Core") {
+    } else if (q.category === "CS") {
       const coreOptions = [
         ["O(n)", "O(log n)", "O(n²)", "O(1)"],
         ["Queue", "Stack", "Array", "Tree"],

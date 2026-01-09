@@ -46,18 +46,19 @@ export async function checkForActiveSessionConflict(userId: number) {
   }
 }
 
-export async function createTestSession(userId: number) {
+export async function createTestSession(userId: number, dept: string) {
   const distribution = {
     Aptitude: 10,
     Verbal: 5,
     Comprehension: 5,
-    Core: 20,
+    [dept]: 20,
     Programming: 10,
   };
 
   try {
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 3);
+
     return await prisma.$transaction(async (tx) => {
       // Create the session
       const session = await tx.testSession.create({
@@ -101,7 +102,7 @@ export async function createTestSession(userId: number) {
         currentOrder += count;
       }
 
-      // Fetch the complete session with questions
+      // Fetch the complete session with questions, options, and comprehension
       const completeSession = await tx.testSession.findFirst({
         where: {
           id: session.id,
@@ -110,7 +111,25 @@ export async function createTestSession(userId: number) {
         include: {
           questions: {
             include: {
-              question: true,
+              question: {
+                include: {
+                  options: {
+                    select: {
+                      id: true,
+                      text: true,
+                      // IMPORTANT: Do NOT include correctOptionId
+                      // questionId is omitted for cleaner response
+                    },
+                  },
+                  comprehension: {
+                    select: {
+                      id: true,
+                      passage: true,
+                      // Do NOT include other questions from same comprehension
+                    },
+                  },
+                },
+              },
             },
             orderBy: {
               order: "asc",
@@ -119,14 +138,51 @@ export async function createTestSession(userId: number) {
         },
       });
 
-      return completeSession;
+      if (!completeSession) {
+        throw new Error("Failed to fetch complete session");
+      }
+
+      // Transform the data to remove correctOptionId and format properly
+      const transformedSession = {
+        sessionId: completeSession.id,
+        userId: completeSession.UserId,
+        startedAt: completeSession.StartedAt,
+        expiresAt: completeSession.ExpiresAt,
+        questions: completeSession.questions.map((sq) => {
+          const question = sq.question;
+
+          // Base question object
+          const transformedQuestion: any = {
+            id: question.id,
+            category: question.category,
+            subCategory: question.subCategory,
+            question: question.question,
+            image: question.image || null, // Include image if exists
+            options: question.options.map((opt) => ({
+              id: opt.id,
+              text: opt.text,
+            })),
+            // CRITICAL: Never include correctOptionId
+            type: question.comprehensionId ? "comprehension" : "regular",
+          };
+
+          // Add comprehension passage if exists
+          if (question.comprehension) {
+            transformedQuestion.passage = question.comprehension.passage;
+            transformedQuestion.comprehensionId = question.comprehension.id;
+          }
+
+          return transformedQuestion;
+        }),
+      };
+
+      return transformedSession;
     });
   } catch (error) {
     console.error("Error in createTestSession transaction:", error);
     throw error;
   }
 }
-
 export async function getTestSessionById(sessionId: number, userId: number) {
   return await prisma.testSession.findFirst({
     where: {
@@ -136,7 +192,25 @@ export async function getTestSessionById(sessionId: number, userId: number) {
     include: {
       questions: {
         include: {
-          question: true,
+          question: {
+            include: {
+              options: {
+                select: {
+                  id: true,
+                  text: true,
+                  // IMPORTANT: Do NOT include correctOptionId
+                  // questionId is omitted for cleaner response
+                },
+              },
+              comprehension: {
+                select: {
+                  id: true,
+                  passage: true,
+                  // Do NOT include other questions from same comprehension
+                },
+              },
+            },
+          },
         },
         orderBy: {
           order: "asc",

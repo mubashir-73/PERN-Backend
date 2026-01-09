@@ -14,6 +14,7 @@ import fastifyJwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
 import { authGuard, adminGuard } from "./auth/auth.js";
 import resultRoutes from "./modules/results/results.route.js";
+import mulipart from "@fastify/multipart";
 
 const server = Fastify().withTypeProvider<ZodTypeProvider>();
 server.setValidatorCompiler(validatorCompiler);
@@ -26,6 +27,7 @@ await server.register(fastifyJwt, {
     signed: false,
   },
 });
+await server.register(mulipart);
 await server.register(bcryptPlugin);
 
 server.decorate("authGuard", authGuard);
@@ -49,3 +51,12 @@ try {
   server.log.error(err);
   process.exit(1);
 }
+
+/*
+ * -- Disable old batch
+UPDATE "LoginSession" SET "isActive" = false;
+
+-- Create new batch
+INSERT INTO "LoginSession" ("code") VALUES ('BATCH2-CS-01');
+
+*/

@@ -22,6 +22,9 @@ export async function createTestSessionHandler(
   try {
     const user = await request.jwtVerify<UserTokenPayload>();
     const userId = user.id;
+    console.log("User:", user);
+    console.log("User dept:", user.dept);
+    const dept = user.dept;
     const isActive = await checkForActiveSessionConflict(userId);
     if (isActive) {
       console.log("User already has an active session");
@@ -31,7 +34,7 @@ export async function createTestSessionHandler(
     }
     console.log("Creating test session for user:", userId);
 
-    const session = await createTestSession(userId);
+    const session = await createTestSession(userId, dept);
 
     if (!session) {
       console.log("Failed to create test session");

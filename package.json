@@ -2,15 +2,18 @@
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
     "@fastify/jwt": "^10.0.0",
+    "@fastify/multipart": "^9.3.0",
     "@fastify/oauth2": "^8.1.2",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "@types/papaparse": "^5.5.2",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
     "fastify-type-provider-zod": "^6.1.0",
+    "papaparse": "^5.5.3",
     "pg": "^8.16.3",
-    "zod": "^4.1.13"
+    "zod": "^4.3.5"
   },
   "type": "module",
   "devDependencies": {

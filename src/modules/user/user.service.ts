@@ -1,7 +1,42 @@
 import prisma from "../../utils/prisma.js";
 import type { CreateUserPayload } from "./user.schema.ts";
 import type { FastifyInstance } from "fastify";
-import type { LoginPayload } from "./user.schema.ts";
+import type { LoginPayload, UserBulkPayload } from "./user.schema.ts";
+import bcrypt from "bcrypt";
+import { extractDeptFromEmail } from "../../utils/extractDept.js";
+
+export async function bulkCreateUsers(users: UserBulkPayload) {
+  const results = {
+    success: 0,
+    failed: 0,
+    errors: [] as Array<{ email: string; error: string }>,
+  };
+
+  for (const user of users) {
+    try {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+
+      await prisma.user.create({
+        data: {
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          password: hashedPassword,
+        },
+      });
+
+      results.success++;
+    } catch (error: any) {
+      results.failed++;
+      results.errors.push({
+        email: user.email,
+        error: error.message || "Unknown error",
+      });
+    }
+  }
+
+  return results;
+}
 
 export async function getAllUsers() {
   const users = await prisma.user.findMany({
@@ -77,3 +112,65 @@ export async function loginUser(input: LoginPayload, fastify: FastifyInstance) {
   if (!isValid) return null;
   return user;
 }
+
+export async function loginStudentWithSessionCode(
+  input: { email: string; sessionCode: string; name: string },
+  fastify: FastifyInstance,
+) {
+  const { email, sessionCode, name } = input;
+
+  // 1. Validate session code
+  const session = await prisma.loginSession.findFirst({
+    where: {
+      code: sessionCode,
+      isActive: true,
+    },
+  });
+
+  if (!session) return null;
+
+  // 2. Extract department
+  const dept = extractDeptFromEmail(email);
+  if (!dept) throw new Error("Invalid college email format");
+
+  // 3. Upsert student
+
+  const user = await prisma.user.upsert({
+    where: { email },
+    update: {
+      name,
+      dept,
+    },
+    create: {
+      email,
+      name,
+      dept,
+      role: "STUDENT",
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      dept: true,
+      role: true,
+    },
+  });
+  console.log("UPSERTED STUDENT", user);
+  return user;
+}
+
+//FOR MY REFERENCE
+/*
+  UPSERTED STUDENT {
+  id: 29,
+  email: '2023cs0051@svce.ac.in',
+  name: 'Mubashir',
+  regNo: null,
+  dept: 'CS',
+  role: 'STUDENT',
+  provider: null,
+  googleId: null,
+  password: null,
+  createdAt: 2026-01-08T08:18:53.708Z,
+  updatedAt: 2026-01-08T08:18:53.708Z
+}*/

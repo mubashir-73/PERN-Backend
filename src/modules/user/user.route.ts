@@ -3,9 +3,16 @@ import {
   getUsersHandler,
   createUserHandler,
   loginHandler,
+  bulkUploadUsersHandler,
+  studentSessionLoginHandler,
 } from "./user.controller.js";
 import { adminGuard } from "../../auth/auth.js";
-import { CreateUserSchema, loginSchema } from "./user.schema.js";
+import {
+  CreateUserSchema,
+  loginSchema,
+  sessionResponseSchema,
+} from "./user.schema.js";
+import { authGuard } from "../../auth/auth.js";
 
 async function userRoutes(server: FastifyInstance) {
   server.get(
@@ -73,6 +80,27 @@ async function userRoutes(server: FastifyInstance) {
     },
     loginHandler,
   );
+
+  server.post(
+    "/loginsession",
+    {
+      schema: {
+        response: {
+          201: sessionResponseSchema,
+        },
+      },
+    },
+    studentSessionLoginHandler,
+  );
+
+  server.post(
+    "/users/bulk-upload",
+    {
+      onRequest: [adminGuard],
+    },
+    bulkUploadUsersHandler,
+  );
 }
 
 export default userRoutes;
+//TODO: Check CSV route functionality

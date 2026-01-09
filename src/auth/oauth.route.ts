@@ -44,41 +44,40 @@ async function oauthRoutes(server: FastifyInstance) {
         const googleOAuth = (server as any).googleOAuth2;
 
         // Exchange code for tokens
-        const result = await googleOAuth.getAccessTokenFromAuthorizationCodeFlow(
-          request
-        );
+        const result =
+          await googleOAuth.getAccessTokenFromAuthorizationCodeFlow(request);
 
         const accessToken = result.token.access_token as string;
 
         if (!accessToken) {
-          return reply.code(400).send({ message: 'No access token received' });
+          return reply.code(400).send({ message: "No access token received" });
         }
 
         // Clear the state cookie set by the plugin
-        reply.clearCookie('oauth2-redirect-state');
+        reply.clearCookie("oauth2-redirect-state");
 
         // Fetch Google profile
         const fetchResult = await fetch(
-          'https://www.googleapis.com/oauth2/v2/userinfo',
+          "https://www.googleapis.com/oauth2/v2/userinfo",
           {
             headers: {
-              Authorization: 'Bearer ' + accessToken,
+              Authorization: "Bearer " + accessToken,
             },
           },
         );
 
         if (!fetchResult.ok) {
-          return reply.code(400).send({ message: 'Failed to fetch user info' });
+          return reply.code(400).send({ message: "Failed to fetch user info" });
         }
 
         const profile = (await fetchResult.json()) as GoogleProfile;
 
         return handleOAuthCallback(server, reply, profile);
       } catch (error) {
-        console.error('OAuth callback error:', error);
+        console.error("OAuth callback error:", error);
         return reply.code(400).send({
-          message: 'OAuth authentication failed',
-          error: error instanceof Error ? error.message : 'Unknown error',
+          message: "OAuth authentication failed",
+          error: error instanceof Error ? error.message : "Unknown error",
         });
       }
     },
@@ -94,4 +93,3 @@ async function oauthRoutes(server: FastifyInstance) {
 }
 
 export default oauthRoutes;
-
