@@ -183,45 +183,80 @@ export async function createTestSession(userId: number, dept: string) {
     throw error;
   }
 }
+
 export async function getTestSessionById(sessionId: number, userId: number) {
-  return await prisma.testSession.findFirst({
-    where: {
-      id: sessionId,
-      UserId: userId,
-    },
-    include: {
-      questions: {
-        include: {
-          question: {
-            include: {
-              options: {
-                select: {
-                  id: true,
-                  text: true,
-                  // IMPORTANT: Do NOT include correctOptionId
-                  // questionId is omitted for cleaner response
+  return await prisma.$transaction(async (tx) => {
+    const completeSession = await tx.testSession.findFirst({
+      where: {
+        id: sessionId,
+        UserId: userId,
+      },
+      include: {
+        questions: {
+          include: {
+            question: {
+              include: {
+                options: {
+                  select: {
+                    id: true,
+                    text: true,
+                  },
                 },
-              },
-              comprehension: {
-                select: {
-                  id: true,
-                  passage: true,
-                  // Do NOT include other questions from same comprehension
+                comprehension: {
+                  select: {
+                    id: true,
+                    passage: true,
+                  },
                 },
               },
             },
           },
-        },
-        orderBy: {
-          order: "asc",
+          orderBy: {
+            order: "asc",
+          },
         },
       },
-    },
+    });
+
+    if (!completeSession) {
+      throw new Error("Test session not found or access denied");
+    }
+
+    // 🔥 Same transformation logic as createTestSession
+    const transformedSession = {
+      sessionId: completeSession.id,
+      userId: completeSession.UserId,
+      startedAt: completeSession.StartedAt,
+      expiresAt: completeSession.ExpiresAt,
+      questions: completeSession.questions.map((sq) => {
+        const question = sq.question;
+
+        const transformedQuestion: any = {
+          id: question.id,
+          category: question.category,
+          subCategory: question.subCategory,
+          question: question.question,
+          image: question.image || null,
+          options: question.options.map((opt) => ({
+            id: opt.id,
+            text: opt.text,
+          })),
+          type: question.comprehensionId ? "comprehension" : "regular",
+        };
+
+        if (question.comprehension) {
+          transformedQuestion.passage = question.comprehension.passage;
+          transformedQuestion.comprehensionId = question.comprehension.id;
+        }
+
+        return transformedQuestion;
+      }),
+    };
+
+    return transformedSession;
   });
 }
 
-// Helper function to convert undefined to null for Prisma
-// Helper function to convert undefined to null for Prisma
 function prepareQuestionData(data: {
   category: string;
   subCategory: string | undefined; // Match the actual type being passed

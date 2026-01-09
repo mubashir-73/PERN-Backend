@@ -41,7 +41,7 @@ export async function createTestSessionHandler(
       return reply.code(500).send({ message: "Failed to create test session" });
     }
 
-    console.log("Test session created successfully:", session.id);
+    console.log("Test session created successfully:", session.sessionId);
     return reply.code(201).send(session);
   } catch (error) {
     console.error("Error creating test session:", error);
