@@ -281,44 +281,43 @@ function prepareQuestionData(data: {
     correctOptionId: data.correctOptionId,
   };
 }
+
 export async function InsertQuestion(payload: QuestionUploadPayload) {
   try {
     return await prisma.$transaction(async (tx) => {
-      // Handle comprehension type
+      // ─────────────────────────────────────────────
+      // COMPREHENSION QUESTIONS
+      // ─────────────────────────────────────────────
       if (payload.type === "comprehension") {
         const createdComprehension = await tx.comprehension.create({
           data: {
             passage: payload.comprehension.passage,
           },
         });
-        console.log("Comprehension created with ID:", createdComprehension.id);
 
         const createdQuestions = [];
 
         for (const questionData of payload.comprehension.questions) {
-          // USE prepareQuestionData here
+          // 1. Create question (NO correctOptionId)
           const createdQuestion = await tx.question.create({
-            data: prepareQuestionData({
+            data: {
               category: questionData.category,
-              subCategory: questionData.subCategory,
+              subCategory: questionData.subCategory ?? null,
               question: questionData.question,
-              image: questionData.image,
+              image: questionData.image ?? null,
               comprehensionId: createdComprehension.id,
-              correctOptionId: questionData.correctOptionId,
-            }),
+            },
           });
-          console.log("Question created with ID:", createdQuestion.id);
 
-          if (questionData.options && questionData.options.length > 0) {
-            const options = questionData.options.map((option) => ({
-              questionId: createdQuestion.id,
-              text: option.text,
-            }));
-
+          // 2. Create options with isCorrect
+          if (questionData.options?.length) {
             await tx.option.createMany({
-              data: options,
+              data: questionData.options.map((option, index) => ({
+                questionId: createdQuestion.id,
+                text: option.text,
+                isCorrect: index === questionData.correctOptionId, //TODO: Only when sending data from frontend include this
+              })),
             });
-            console.log("Options created for question:", createdQuestion.id);
           }
 
           createdQuestions.push(createdQuestion);
@@ -330,37 +329,33 @@ export async function InsertQuestion(payload: QuestionUploadPayload) {
           questions: createdQuestions,
         };
       }
-      // Handle regular question type
-      else {
-        // USE prepareQuestionData here
-        const createdQuestion = await tx.question.create({
-          data: prepareQuestionData({
-            category: payload.category,
-            subCategory: payload.subCategory,
-            question: payload.question,
-            image: payload.image,
-            correctOptionId: payload.correctOptionId,
-          }),
-        });
-        console.log("Question created with ID:", createdQuestion.id);
 
-        if (payload.options && payload.options.length > 0) {
-          const options = payload.options.map((option) => ({
+      // ─────────────────────────────────────────────
+      // REGULAR QUESTION
+      // ─────────────────────────────────────────────
+      const createdQuestion = await tx.question.create({
+        data: {
+          category: payload.category,
+          subCategory: payload.subCategory ?? null,
+          question: payload.question,
+          image: payload.image ?? null,
+        },
+      });
+
+      if (payload.options?.length) {
+        await tx.option.createMany({
+          data: payload.options.map((option, index) => ({
             questionId: createdQuestion.id,
             text: option.text,
-          }));
-
-          await tx.option.createMany({
-            data: options,
-          });
-          console.log("Options created for question:", createdQuestion.id);
-        }
-
-        return {
-          type: "regular" as const,
-          question: createdQuestion,
-        };
+            isCorrect: index === payload.correctOptionId, // ✅ FIX
+          })),
+        });
       }
+
+      return {
+        type: "regular" as const,
+        question: createdQuestion,
+      };
     });
   } catch (error) {
     console.error("Error inserting question:", error);
@@ -374,42 +369,36 @@ export async function InsertBulkQuestions(payload: BulkQuestionUploadPayload) {
       const results = [];
 
       for (const questionPayload of payload.questions) {
+        // ─────────────────────────────────────────────
+        // COMPREHENSION
+        // ─────────────────────────────────────────────
         if (questionPayload.type === "comprehension") {
-          // Create comprehension
           const createdComprehension = await tx.comprehension.create({
             data: {
               passage: questionPayload.comprehension.passage,
             },
           });
-          console.log(
-            "Comprehension created with ID:",
-            createdComprehension.id,
-          );
 
           const createdQuestions = [];
 
-          // Create all 5 questions for this comprehension
           for (const questionData of questionPayload.comprehension.questions) {
             const createdQuestion = await tx.question.create({
-              data: prepareQuestionData({
+              data: {
                 category: questionData.category,
-                subCategory: questionData.subCategory,
+                subCategory: questionData.subCategory ?? null,
                 question: questionData.question,
-                image: questionData.image,
+                image: questionData.image ?? null,
                 comprehensionId: createdComprehension.id,
-                correctOptionId: questionData.correctOptionId,
-              }),
+              },
             });
 
-            // Create options
-            if (questionData.options && questionData.options.length > 0) {
-              const options = questionData.options.map((option) => ({
-                questionId: createdQuestion.id,
-                text: option.text,
-              }));
-
+            if (questionData.options?.length) {
               await tx.option.createMany({
-                data: options,
+                data: questionData.options.map((option, index) => ({
+                  questionId: createdQuestion.id,
+                  text: option.text,
+                  isCorrect: index === questionData.correctOptionId, // ✅ FIX
+                })),
               });
             }
 
@@ -421,27 +410,28 @@ export async function InsertBulkQuestions(payload: BulkQuestionUploadPayload) {
             comprehension: createdComprehension,
             questions: createdQuestions,
           });
-        } else {
-          // Create regular question
+        }
+
+        // ─────────────────────────────────────────────
+        // REGULAR
+        // ─────────────────────────────────────────────
+        else {
           const createdQuestion = await tx.question.create({
-            data: prepareQuestionData({
+            data: {
               category: questionPayload.category,
-              subCategory: questionPayload.subCategory,
+              subCategory: questionPayload.subCategory ?? null,
               question: questionPayload.question,
-              image: questionPayload.image,
-              correctOptionId: questionPayload.correctOptionId,
-            }),
+              image: questionPayload.image ?? null,
+            },
           });
 
-          // Create options
-          if (questionPayload.options && questionPayload.options.length > 0) {
-            const options = questionPayload.options.map((option) => ({
-              questionId: createdQuestion.id,
-              text: option.text,
-            }));
-
+          if (questionPayload.options?.length) {
             await tx.option.createMany({
-              data: options,
+              data: questionPayload.options.map((option, index) => ({
+                questionId: createdQuestion.id,
+                text: option.text,
+                isCorrect: index === questionPayload.correctOptionId, // ✅ FIX
+              })),
             });
           }
 

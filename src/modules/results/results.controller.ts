@@ -6,6 +6,7 @@ import {
   getResultBySessionId,
   getAllResultsByUserId,
 } from "./results.service.ts";
+import type { UserTokenPayload } from "../user/user.schema.js";
 
 // Submit answers endpoint
 export async function submitAnswersHandler(
@@ -14,18 +15,22 @@ export async function submitAnswersHandler(
 ) {
   try {
     // Assuming you have user authentication middleware that sets request.user
-    const userId = (request as any).user?.id;
+    const user = await request.jwtVerify<UserTokenPayload>();
+    const userId = user.id;
+    const dept = user.dept;
 
     if (!userId) {
       return reply.status(401).send({ error: "Unauthorized" });
     }
 
     const answersData = request.body;
+    console.log(answersData);
     const validatedAnswers = submitAnswersSchema.parse(answersData);
 
     const result = await submitAnswersAndCalculateResult(
       validatedAnswers,
       userId,
+      dept,
     );
 
     return reply.status(200).send({

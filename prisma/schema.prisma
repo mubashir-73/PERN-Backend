@@ -104,8 +104,7 @@ model Question {
   comprehensionId Int?
   comprehension   Comprehension? @relation(fields: [comprehensionId], references: [id])
 
-  options         Option[]
-  correctOptionId Int
+  options Option[]
 
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @default(now())
@@ -116,6 +115,7 @@ model Option {
   id         Int      @id @default(autoincrement())
   questionId Int
   text       String
+  isCorrect  Boolean  @default(false)
   question   Question @relation(fields: [questionId], references: [id])
 
   createdAt DateTime @default(now())

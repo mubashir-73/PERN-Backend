@@ -4,25 +4,36 @@ import prisma from "../../utils/prisma.js";
 export async function submitAnswersAndCalculateResult(
   payload: SubmitAnswersPayload,
   userId: number,
+  dept: string,
 ) {
   try {
+    const CORE_CATEGORIES = ["CS", "IT", "EE"];
+
+    function resolveScoreBucket(category: string, dept: string) {
+      const normalized = category.toUpperCase();
+
+      if (CORE_CATEGORIES.includes(normalized)) {
+        return "core";
+      }
+
+      return normalized.toLowerCase();
+    }
+
     return await prisma.$transaction(async (tx) => {
-      // 1. Verify the session belongs to the user and is not completed
+      // 1. Verify the session
       const session = await tx.testSession.findFirst({
         where: {
           id: payload.sessionId,
           UserId: userId,
-          CompletedAt: null, // Not already completed
-          ExpiresAt: {
-            gt: new Date(), // Not expired
-          },
+          CompletedAt: null,
+          ExpiresAt: { gt: new Date() },
         },
         include: {
           questions: {
             include: {
               question: {
                 include: {
-                  options: true,
+                  options: true, // contains isCorrect
                 },
               },
             },
@@ -34,7 +45,7 @@ export async function submitAnswersAndCalculateResult(
         throw new Error("Session not found, already completed, or expired");
       }
 
-      // 2. Check if result already exists
+      // 2. Prevent resubmission
       const existingResult = await tx.result.findUnique({
         where: { sessionId: payload.sessionId },
       });
@@ -43,7 +54,7 @@ export async function submitAnswersAndCalculateResult(
         throw new Error("Answers already submitted for this session");
       }
 
-      // 3. Initialize score tracking
+      // 3. Score buckets
       const scores = {
         aptitude: { correct: 0, total: 0 },
         core: { correct: 0, total: 0 },
@@ -52,31 +63,47 @@ export async function submitAnswersAndCalculateResult(
         comprehension: { correct: 0, total: 0 },
       };
 
-      // 4. Process each answer
       const answersToInsert = [];
 
+      // 4. Process answers
       for (const answer of payload.answers) {
         const sessionQuestion = session.questions.find(
           (sq) => sq.questionId === answer.questionId,
         );
 
         if (!sessionQuestion) {
-          throw new Error(`Question ${answer.questionId} not in this session`);
+          throw new Error(
+            `Question ${answer.questionId} not part of this session`,
+          );
         }
 
         const question = sessionQuestion.question;
-        const isCorrect = question.correctOptionId === answer.optionId;
 
-        // Track scores by category
-        const category = question.category.toLowerCase();
-        if (scores[category as keyof typeof scores]) {
-          scores[category as keyof typeof scores].total++;
+        // 🔑 Find selected option
+        const selectedOption = question.options.find(
+          (opt) => opt.id === answer.optionId,
+        );
+
+        if (!selectedOption) {
+          throw new Error(
+            `Invalid option ${answer.optionId} for question ${question.id}`,
+          );
+        }
+
+        const isCorrect = selectedOption.isCorrect === true;
+
+        // 5. Category scoring
+
+        const bucket = resolveScoreBucket(question.category, dept);
+
+        if (scores[bucket as keyof typeof scores]) {
+          scores[bucket as keyof typeof scores].total++;
           if (isCorrect) {
-            scores[category as keyof typeof scores].correct++;
+            scores[bucket as keyof typeof scores].correct++;
           }
         }
 
-        // Prepare answer for insertion
+        // 6. Save answer
         answersToInsert.push({
           sessionId: payload.sessionId,
           questionId: answer.questionId,
@@ -85,12 +112,12 @@ export async function submitAnswersAndCalculateResult(
         });
       }
 
-      // 5. Insert all answers
+      // 7. Insert answers
       await tx.answer.createMany({
         data: answersToInsert,
       });
 
-      // 6. Calculate total points (each correct answer = 1 point)
+      // 8. Total points
       const totalPoints =
         scores.aptitude.correct +
         scores.core.correct +
@@ -98,7 +125,7 @@ export async function submitAnswersAndCalculateResult(
         scores.programming.correct +
         scores.comprehension.correct;
 
-      // 7. Create result
+      // 9. Create result
       const result = await tx.result.create({
         data: {
           userId,
@@ -112,7 +139,7 @@ export async function submitAnswersAndCalculateResult(
         },
       });
 
-      // 8. Mark session as completed
+      // 10. Close session
       await tx.testSession.update({
         where: { id: payload.sessionId },
         data: { CompletedAt: new Date() },
@@ -178,42 +205,3 @@ export async function getAllResultsByUserId(userId: number) {
 }
 
 // Get detailed results with answers (for review)
-export async function getDetailedResultBySessionId(
-  sessionId: number,
-  userId: number,
-) {
-  const result = await prisma.result.findFirst({
-    where: {
-      sessionId,
-      userId,
-    },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          regNo: true,
-          dept: true,
-        },
-      },
-    },
-  });
-
-  if (!result) {
-    return null;
-  }
-
-  // Get all answers with question details
-  const answers = await prisma.answer.findMany({
-    where: { sessionId },
-    include: {
-      // You'll need to add relations to Answer model for this
-    },
-  });
-
-  return {
-    result,
-    answers,
-  };
-}

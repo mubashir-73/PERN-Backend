@@ -82,7 +82,7 @@ export const uploadComprehensionSchema = z.object({
       uploadQuestionBaseSchema.extend({
         options: z
           .array(uploadOptionSchema)
-          .length(5, "Exactly 5 options required for comprehension questions"),
+          .length(4, "Exactly 4 options required for comprehension questions"),
       }),
     )
     .length(5, "Exactly 5 questions required for comprehension"),
