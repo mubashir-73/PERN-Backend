@@ -55,6 +55,14 @@ model TestSessionQuestion {
   @@id([sessionId, questionId])
 }
 
+model ExamSession {
+  id        Int      @id @default(autoincrement())
+  startsAt  DateTime
+  endsAt    DateTime
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
 model Result {
   id        Int         @id @default(autoincrement())
   userId    Int

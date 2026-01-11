@@ -1,0 +1,15 @@
+meta {
+  name: set the sessioncode
+  type: http
+  seq: 13
+}
+
+post {
+  url: http://localhost:3000/api/admin/session-code
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

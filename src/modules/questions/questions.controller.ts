@@ -11,6 +11,7 @@ import {
   checkForActiveSessionConflict,
   InsertQuestion,
   InsertBulkQuestions,
+  alreadyCompletedSession,
 } from "./questions.service.js";
 import type { UserTokenPayload } from "../user/user.schema.js";
 import z from "zod";
@@ -31,6 +32,13 @@ export async function createTestSessionHandler(
       return reply
         .code(409)
         .send({ message: "User already has an active session" });
+    }
+    const isCompleted = await alreadyCompletedSession(userId);
+    if (isCompleted) {
+      console.log("User already completed a session");
+      return reply
+        .code(409)
+        .send({ message: "User already completed a session" });
     }
     console.log("Creating test session for user:", userId);
 

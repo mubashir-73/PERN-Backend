@@ -15,6 +15,7 @@ import fastifyCookie from "@fastify/cookie";
 import { authGuard, adminGuard } from "./auth/auth.js";
 import resultRoutes from "./modules/results/results.route.js";
 import mulipart from "@fastify/multipart";
+import { adminRoutes } from "./modules/admin/admin.route.ts";
 
 const server = Fastify().withTypeProvider<ZodTypeProvider>();
 server.setValidatorCompiler(validatorCompiler);
@@ -42,6 +43,7 @@ await server.register(userRoutes, { prefix: "/api/users" });
 await server.register(oauthRoutes);
 await server.register(questionsRoutes, { prefix: "/api/questions" });
 await server.register(resultRoutes, { prefix: "/api/results" });
+await server.register(adminRoutes, { prefix: "/api/admin" });
 
 // Run the server!
 try {

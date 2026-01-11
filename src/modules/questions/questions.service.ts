@@ -5,6 +5,17 @@ import type {
 } from "./questions.schema.ts";
 import type { QuestionPayload } from "./questions.schema.ts";
 
+function shuffleArray<T>(array: readonly T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = shuffled[i] as T;
+    shuffled[i] = shuffled[j] as T;
+    shuffled[j] = temp;
+  }
+  return shuffled;
+}
+
 export async function getActiveSessionByUserId(userId: number) {
   return await prisma.testSession.findFirst({
     where: {
@@ -46,6 +57,19 @@ export async function checkForActiveSessionConflict(userId: number) {
   }
 }
 
+export async function alreadyCompletedSession(userId: number) {
+  const session = await prisma.testSession.findFirst({
+    where: {
+      UserId: userId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return !!session; // true if exists, false if not
+}
+
 export async function createTestSession(userId: number, dept: string) {
   const distribution = {
     Aptitude: 10,
@@ -75,21 +99,65 @@ export async function createTestSession(userId: number, dept: string) {
       for (const [category, count] of Object.entries(distribution)) {
         console.log(`Fetching ${count} questions for category: ${category}`);
 
-        const questions = await tx.question.findMany({
-          where: {
-            category,
-          },
-          take: count,
-        });
+        let selectedQuestions;
 
-        console.log(`Found ${questions.length} questions for ${category}`);
+        // Special handling for Comprehension
+        if (category === "Comprehension") {
+          // Get one random comprehension with at least 5 questions
+          const comprehensions = await tx.comprehension.findMany({
+            include: {
+              questions: true,
+            },
+          });
 
-        if (questions.length === 0) {
-          throw new Error(`No questions found for category: ${category}`);
+          // Filter comprehensions that have enough questions
+          const validComprehensions = comprehensions.filter(
+            (c: { id: number; passage: string; questions: any[] }) =>
+              c.questions.length >= count,
+          );
+
+          if (validComprehensions.length === 0) {
+            throw new Error(
+              `No comprehension passages with at least ${count} questions found`,
+            );
+          }
+
+          // Pick one random comprehension
+          const randomComp = validComprehensions[
+            Math.floor(Math.random() * validComprehensions.length)
+          ] as { id: number; passage: string; questions: any[] };
+
+          console.log(
+            `Selected comprehension ID: ${randomComp.id} with ${randomComp.questions.length} questions`,
+          );
+
+          // Shuffle and take required count
+          selectedQuestions = shuffleArray(randomComp.questions).slice(
+            0,
+            count,
+          );
+        } else {
+          // Regular questions - fetch all, shuffle, take count
+          const allQuestions = await tx.question.findMany({
+            where: {
+              category,
+              comprehensionId: null, // Exclude comprehension questions
+            },
+          });
+
+          if (allQuestions.length === 0) {
+            throw new Error(`No questions found for category: ${category}`);
+          }
+
+          selectedQuestions = shuffleArray(allQuestions).slice(0, count);
         }
 
+        console.log(
+          `Selected ${selectedQuestions.length} questions for ${category}`,
+        );
+
         // Create session questions
-        const sessionQuestions = questions.map((question, index) => ({
+        const sessionQuestions = selectedQuestions.map((question, index) => ({
           sessionId: session.id,
           questionId: question.id,
           order: currentOrder + index,
@@ -99,7 +167,7 @@ export async function createTestSession(userId: number, dept: string) {
           data: sessionQuestions,
         });
 
-        currentOrder += count;
+        currentOrder += selectedQuestions.length;
       }
 
       // Fetch the complete session with questions, options, and comprehension
@@ -117,15 +185,13 @@ export async function createTestSession(userId: number, dept: string) {
                     select: {
                       id: true,
                       text: true,
-                      // IMPORTANT: Do NOT include correctOptionId
-                      // questionId is omitted for cleaner response
+                      // IMPORTANT: Do NOT include isCorrect
                     },
                   },
                   comprehension: {
                     select: {
                       id: true,
                       passage: true,
-                      // Do NOT include other questions from same comprehension
                     },
                   },
                 },
@@ -142,7 +208,7 @@ export async function createTestSession(userId: number, dept: string) {
         throw new Error("Failed to fetch complete session");
       }
 
-      // Transform the data to remove correctOptionId and format properly
+      // Transform the data
       const transformedSession = {
         sessionId: completeSession.id,
         userId: completeSession.UserId,
@@ -151,18 +217,26 @@ export async function createTestSession(userId: number, dept: string) {
         questions: completeSession.questions.map((sq) => {
           const question = sq.question;
 
-          // Base question object
-          const transformedQuestion: any = {
+          const transformedQuestion: {
+            id: number;
+            category: string;
+            subCategory: string | null;
+            question: string;
+            image: string | null;
+            options: Array<{ id: number; text: string }>;
+            type: string;
+            passage?: string;
+            comprehensionId?: number;
+          } = {
             id: question.id,
             category: question.category,
             subCategory: question.subCategory,
             question: question.question,
-            image: question.image || null, // Include image if exists
+            image: question.image || null,
             options: question.options.map((opt) => ({
               id: opt.id,
               text: opt.text,
             })),
-            // CRITICAL: Never include correctOptionId
             type: question.comprehensionId ? "comprehension" : "regular",
           };
 
@@ -183,7 +257,6 @@ export async function createTestSession(userId: number, dept: string) {
     throw error;
   }
 }
-
 export async function getTestSessionById(sessionId: number, userId: number) {
   return await prisma.$transaction(async (tx) => {
     const completeSession = await tx.testSession.findFirst({

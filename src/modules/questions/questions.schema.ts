@@ -69,10 +69,7 @@ export const uploadQuestionBaseSchema = z.object({
   subCategory: z.string().optional(),
   question: z.string().min(1, "Question text is required"),
   image: z.string().optional(),
-  correctOptionId: z
-    .number()
-    .int()
-    .positive("Valid correct option ID is required"),
+  correctOptionId: z.number().int(),
 });
 
 export const uploadComprehensionSchema = z.object({
@@ -100,10 +97,7 @@ export const questionUploadSchema = z.discriminatedUnion("type", [
     options: z
       .array(uploadOptionSchema)
       .length(4, "Exactly 4 options required for regular questions"),
-    correctOptionId: z
-      .number()
-      .int()
-      .positive("Valid correct option ID is required"),
+    correctOptionId: z.number().int(),
   }),
   // Comprehension question
   z.object({

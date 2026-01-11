@@ -128,7 +128,7 @@ export async function loginHandler(
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
-      maxAge: 3 * 60 * 60, // 3 hours
+      maxAge: 3 * 60 * 60, // Dynamic timing setting and through admin
     });
     return reply.code(201).send(user);
   } catch (error) {

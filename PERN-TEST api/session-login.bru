@@ -6,10 +6,19 @@ meta {
 
 post {
   url: http://localhost:3000/api/users/loginsession
-  body: none
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "email":"2023cs0051@svce.ac.in",
+    "sessionCode":"BATCH2-CS-01",
+    "name":"Mubashir"
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
