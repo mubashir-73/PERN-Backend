@@ -46,12 +46,20 @@ export async function getAllUsers() {
       name: true,
       role: true,
       createdAt: true,
+      testSessions: {
+        select: { id: true },
+      },
     },
   });
 
-  if (!users) return null;
-
-  return users;
+  return users.map((u) => ({
+    id: u.id,
+    email: u.email,
+    name: u.name,
+    role: u.role,
+    createdAt: u.createdAt.toISOString(),
+    testSessionIds: u.testSessions.map((s) => s.id),
+  }));
 }
 
 export async function getUserById(id: number) {
@@ -79,6 +87,47 @@ export async function getUserByEmail(email: string) {
       provider: true,
       googleId: true,
     },
+  });
+}
+
+export async function deleteUserById(userId: number) {
+  return await prisma.$transaction(async (tx) => {
+    // 1. Get user's test sessions
+    const sessions = await tx.testSession.findMany({
+      where: { UserId: userId },
+      select: { id: true },
+    });
+
+    const sessionIds = sessions.map((s) => s.id);
+
+    if (sessionIds.length > 0) {
+      // 2. Delete answers
+      await tx.answer.deleteMany({
+        where: { sessionId: { in: sessionIds } },
+      });
+
+      // 3. Delete session-question mappings
+      await tx.testSessionQuestion.deleteMany({
+        where: { sessionId: { in: sessionIds } },
+      });
+
+      // 4. Delete results
+      await tx.result.deleteMany({
+        where: { sessionId: { in: sessionIds } },
+      });
+
+      // 5. Delete test sessions
+      await tx.testSession.deleteMany({
+        where: { id: { in: sessionIds } },
+      });
+    }
+
+    // 6. Finally delete the user
+    await tx.user.delete({
+      where: { id: userId },
+    });
+
+    return { success: true };
   });
 }
 

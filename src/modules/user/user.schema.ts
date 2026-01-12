@@ -1,12 +1,12 @@
-import { z } from "zod";
+import { array, z } from "zod";
 
 export const getUserSchema = z.object({
-  //admin needs to be able to see all users
   id: z.number(),
   email: z.string(),
-  name: z.string().optional(),
-  role: z.enum(["ADMIN", "STUDENT"]),
-  createdAt: z.string(),
+  name: z.string().nullable(),
+  role: z.enum(["ADMIN", "STUDENT", "BUILDER"]),
+  createdAt: z.string(), // ISO string
+  testSessionIds: z.array(z.number()),
 });
 
 export const sessionCodeSchema = z.object({
@@ -32,7 +32,6 @@ export const sessionResponseSchema = z.object({
 });
 
 export const CreateUserSchema = z.object({
-  // for registering those bitches
   email: z.string(),
   name: z.string(),
   password: z.string(),
@@ -60,12 +59,14 @@ export const loginSchema = z.object({
   password: z.string(),
 });
 export const userBulkSchema = z.array(userCsvSchema);
+export const UserListResponse = z.array(getUserSchema);
 
 export type LoginPayload = z.infer<typeof loginSchema>;
 export type UserTokenPayload = z.infer<typeof userTokenSchema>;
 export type CreateUserPayload = z.infer<typeof CreateUserSchema>;
 export type UserBulkPayload = z.infer<typeof userBulkSchema>;
 export type SessionCodeResponse = z.infer<typeof sessionCodeSchema>;
+export type UserListResp = z.infer<typeof UserListResponse>;
 
 //TODO: Add login response schema
 

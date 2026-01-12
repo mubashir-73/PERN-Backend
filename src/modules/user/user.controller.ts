@@ -4,12 +4,18 @@ import {
   getAllUsers,
   createUser,
   loginUser,
+  deleteUserById,
   bulkCreateUsers,
 } from "./user.service.js";
 import type { CreateUserPayload, LoginPayload } from "./user.schema.js";
 import { sessionResponseSchema, userBulkSchema } from "./user.schema.ts";
 import type { UserTokenPayload } from "./user.schema.js";
 import { loginStudentWithSessionCode } from "./user.service.js";
+import type { RouteGenericInterface } from "fastify";
+
+interface CreateUserRoute extends RouteGenericInterface {
+  Body: CreateUserPayload;
+}
 
 export async function getUsersHandler(
   request: FastifyRequest,
@@ -20,6 +26,7 @@ export async function getUsersHandler(
     if (!users) {
       return reply.code(404).send({ message: "No users found" });
     }
+    console.log("USERS in Controller layer", users);
     return reply.code(200).send(users);
   } catch (error) {
     console.error("Error getting users:", error);
@@ -75,34 +82,33 @@ export async function bulkUploadUsersHandler(
 }
 
 export async function createUserHandler(
-  request: FastifyRequest<{ Body: CreateUserPayload }>,
+  request: FastifyRequest<CreateUserRoute>,
   reply: FastifyReply,
 ) {
   try {
-    const body = request.body;
-    console.log("Request body:", body);
-    console.log("Bcrypt available:", !!request.server.bcrypt); // I did some Bcrypt nonsense dont worry
+    const body = request.body; // fully typed 🎉
 
-    const user = await createUser(body, request.server); //Token sigining is here  and then I will set that stupid cookie maybe will remove for registering and only do for login
+    const user = await createUser(body, request.server);
+
     const token = request.server.jwt.sign({
       id: user.id,
       email: user.email,
       role: user.role,
-    } as UserTokenPayload);
-    console.log("JWT token created, setting cookie");
+    });
+
     reply.setCookie("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
-      maxAge: 3 * 60 * 60, // 3 hours
+      maxAge: 3 * 60 * 60,
     });
+
     return reply.code(201).send(user);
   } catch (error) {
-    console.error("Error creating user:", error); //Yes I need to learn error handling, dont ask me again why i did this
+    request.log.error(error);
     return reply.code(500).send({
       message: "Internal server error",
-      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }
@@ -180,6 +186,24 @@ export async function studentSessionLoginHandler(
     console.error("Session login error:", err);
     return reply.code(400).send({
       message: err instanceof Error ? err.message : "Login failed",
+    });
+  }
+}
+
+export async function deleteUserHandler(request: any, reply: any) {
+  const userId = Number(request.params.userId);
+
+  if (isNaN(userId)) {
+    return reply.status(400).send({ message: "Invalid user ID" });
+  }
+
+  try {
+    await deleteUserById(userId);
+    return reply.send({ message: "User deleted successfully" });
+  } catch (error) {
+    request.log.error(error);
+    return reply.status(500).send({
+      message: "Failed to delete user",
     });
   }
 }

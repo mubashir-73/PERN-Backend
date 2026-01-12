@@ -5,14 +5,21 @@ import {
   loginHandler,
   bulkUploadUsersHandler,
   studentSessionLoginHandler,
+  deleteUserHandler,
 } from "./user.controller.js";
 import { adminGuard } from "../../auth/auth.js";
 import {
   CreateUserSchema,
   loginSchema,
   sessionResponseSchema,
+  UserListResponse,
+  type CreateUserPayload,
 } from "./user.schema.js";
-import { authGuard } from "../../auth/auth.js";
+import type { RouteGenericInterface } from "fastify";
+
+interface CreateUserRoute extends RouteGenericInterface {
+  Body: CreateUserPayload;
+}
 
 async function userRoutes(server: FastifyInstance) {
   server.get(
@@ -21,38 +28,35 @@ async function userRoutes(server: FastifyInstance) {
       onRequest: [adminGuard],
       schema: {
         response: {
-          200: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                id: { type: "number" },
-                email: { type: "string" },
-                name: { type: "string" },
-                role: { enum: ["ADMIN", "STUDENT"] },
-                createdAt: { type: "string" },
-              },
-            },
-          },
+          200: UserListResponse,
         },
       },
     },
     getUsersHandler,
   );
 
-  server.post(
+  server.delete(
+    "/:userId",
+    {
+      onRequest: [adminGuard],
+    },
+    deleteUserHandler,
+  );
+
+  server.post<CreateUserRoute>(
     "/create-user",
     {
+      onRequest: [adminGuard],
       schema: {
         body: CreateUserSchema,
         response: {
-          200: {
+          201: {
             type: "object",
             properties: {
               id: { type: "number" },
               email: { type: "string" },
               name: { type: "string" },
-              role: { enum: ["BUILDER", "STUDENT"] }, //This will be set by the api call based on interface in frontend
+              role: { enum: ["BUILDER", "STUDENT", "ADMIN"] }, //This will be set by the api call based on interface in frontend
             },
           },
         },

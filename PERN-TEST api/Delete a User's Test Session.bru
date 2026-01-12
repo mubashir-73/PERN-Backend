@@ -1,0 +1,22 @@
+meta {
+  name: Delete a User's Test Session
+  type: http
+  seq: 15
+}
+
+post {
+  url: http://localhost:3000/api/questions/deleteSession
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "userId":29
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

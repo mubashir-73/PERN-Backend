@@ -7,6 +7,10 @@ export const optionSchema = z.object({
   text: z.string(),
 });
 
+export const deleteTestSessionRequestSchema = z.object({
+  userId: z.number(),
+});
+
 export const questionSchema = z.object({
   id: z.number(),
   category: z.string(),

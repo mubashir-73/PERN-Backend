@@ -4,11 +4,13 @@ import {
   getTestSessionHandler,
   UploadQuestionsHandler,
   BulkUploadQuestionsHandler,
+  DeleteTestSessionHandler,
 } from "./questions.controller.js";
 import {
   questionSchema,
   questionUploadSchema,
   bulkQuestionUploadSchema,
+  deleteTestSessionRequestSchema,
 } from "./questions.schema.js";
 import { authGuard, requireRole } from "../../auth/auth.js";
 
@@ -49,6 +51,17 @@ async function questionsRoutes(server: FastifyInstance) {
       },
     },
     BulkUploadQuestionsHandler,
+  );
+
+  server.post(
+    "/deleteSession",
+    {
+      onRequest: [authGuard, requireRole("ADMIN")],
+      schema: {
+        body: deleteTestSessionRequestSchema,
+      },
+    },
+    DeleteTestSessionHandler,
   );
 }
 

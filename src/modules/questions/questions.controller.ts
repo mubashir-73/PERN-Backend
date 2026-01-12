@@ -12,6 +12,7 @@ import {
   InsertQuestion,
   InsertBulkQuestions,
   alreadyCompletedSession,
+  deleteTestSession,
 } from "./questions.service.js";
 import type { UserTokenPayload } from "../user/user.schema.js";
 import z from "zod";
@@ -146,5 +147,19 @@ export async function BulkUploadQuestionsHandler(
     }
     console.error("Error bulk uploading questions:", error);
     return reply.status(500).send({ error: "Internal server error" });
+  }
+}
+
+export async function DeleteTestSessionHandler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  try {
+    const userId = request.UserId;
+    const session = await deleteTestSession(userId);
+    return reply.code(200).send(session);
+  } catch (error) {
+    console.error("Error deleting test session:", error);
+    return reply.code(500).send({ message: "Internal server error" });
   }
 }

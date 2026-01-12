@@ -522,3 +522,48 @@ export async function InsertBulkQuestions(payload: BulkQuestionUploadPayload) {
     throw error;
   }
 }
+
+export async function deleteTestSession(userId: number) {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      // 1. Get ALL sessions for the user (edge-case safe)
+      const sessions = await tx.testSession.findMany({
+        where: { UserId: userId },
+        select: { id: true },
+      });
+
+      if (sessions.length === 0) {
+        return { deletedSessions: 0 };
+      }
+
+      const sessionIds = sessions.map((s) => s.id);
+
+      // 2. Delete answers (not a Prisma relation but FK-dependent logically)
+      await tx.answer.deleteMany({
+        where: { sessionId: { in: sessionIds } },
+      });
+
+      // 3. Delete session-question mappings
+      await tx.testSessionQuestion.deleteMany({
+        where: { sessionId: { in: sessionIds } },
+      });
+
+      // 4. Delete results
+      await tx.result.deleteMany({
+        where: { sessionId: { in: sessionIds } },
+      });
+
+      // 5. Finally delete the sessions
+      const deleted = await tx.testSession.deleteMany({
+        where: { id: { in: sessionIds } },
+      });
+
+      return {
+        deletedSessions: deleted.count,
+      };
+    });
+  } catch (error) {
+    console.error("Error deleting test sessions:", error);
+    throw error;
+  }
+}
