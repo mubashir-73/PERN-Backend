@@ -19,6 +19,8 @@ export const createExamSessionResponseSchema = z.object({
 --------------------------- */
 export const sessionStatusBaseSchema = z.object({
   status: z.enum(["NOT_STARTED", "ONGOING", "ENDED"]),
+  severTime: z.string(),
+  endsAt: z.string(),
 });
 
 export const sessionStatusOngoingSchema = z.object({

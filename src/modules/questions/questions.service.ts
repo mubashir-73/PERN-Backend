@@ -21,7 +21,7 @@ export async function getActiveSessionByUserId(userId: number) {
     where: {
       UserId: userId,
       ExpiresAt: {
-        gt: new Date(), // Greater than current time (not expired)
+        gt: new Date(),
       },
     },
     include: {
@@ -49,7 +49,7 @@ export async function checkForActiveSessionConflict(userId: number) {
         },
       },
     });
-
+    console.log("ACTIVE SESSION", activeSession);
     return activeSession;
   } catch (error) {
     console.error("Error checking for active session conflict:", error);

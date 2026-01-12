@@ -13,6 +13,12 @@ import {
   setSessionCodeBodySchema,
   setSessionCodeResponseSchema,
 } from "./admin.schema.ts";
+import { z } from "zod";
+
+export const sessionStatusResponseSchema = z.union([
+  sessionStatusOngoingSchema,
+  sessionStatusBaseSchema,
+]);
 
 export async function adminRoutes(server: FastifyInstance) {
   server.post(
@@ -29,8 +35,7 @@ export async function adminRoutes(server: FastifyInstance) {
     {
       schema: {
         response: {
-          200: sessionStatusBaseSchema,
-          203: sessionStatusOngoingSchema,
+          200: sessionStatusResponseSchema,
           404: {
             type: "object",
             properties: {

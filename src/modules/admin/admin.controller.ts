@@ -58,22 +58,57 @@ export async function getSessionStatusHandler(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  const session = await getActiveExamSession();
+  try {
+    const session = await getActiveExamSession();
+    const now = new Date();
 
-  if (!session) {
-    return reply.code(404).send({ message: "No active exam session" });
+    // No active session at all
+    if (!session) {
+      return reply.code(200).send({
+        status: "NO_SESSION",
+        serverTime: now.toISOString(),
+      });
+    }
+
+    const startsAt = session.startsAt;
+    const endsAt = session.endsAt;
+
+    // Debug log (optional, remove later)
+    console.log({
+      serverNowUTC: now.toISOString(),
+      startsAtUTC: startsAt.toISOString(),
+      endsAtUTC: endsAt.toISOString(),
+    });
+
+    // Not started yet
+    if (now < startsAt) {
+      return reply.code(200).send({
+        status: "NOT_STARTED",
+        serverTime: now.toISOString(),
+        startsAt: startsAt.toISOString(),
+      });
+    }
+
+    // Already ended
+    if (now >= endsAt) {
+      return reply.code(200).send({
+        status: "ENDED",
+        serverTime: now.toISOString(),
+        endsAt: endsAt.toISOString(),
+      });
+    }
+
+    // Ongoing
+    return reply.code(200).send({
+      status: "ONGOING",
+      serverTime: now.toISOString(),
+      endsAt: endsAt.toISOString(),
+      remainingMs: endsAt.getTime() - now.getTime(),
+    });
+  } catch (err) {
+    console.error("Error getting session status:", err);
+    return reply.code(500).send({
+      message: "Failed to get session status",
+    });
   }
-
-  const result = calculateRemainingTime(session);
-
-  if (result.status !== "ONGOING") {
-    return reply.code(200).send({ status: result.status });
-  }
-
-  return reply.code(203).send({
-    status: "ONGOING",
-    serverTime: new Date(),
-    endsAt: session.endsAt,
-    remainingMs: result.remainingMs,
-  });
 }
