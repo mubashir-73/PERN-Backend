@@ -16,6 +16,12 @@ enum OAuthProvider {
   GOOGLE
 }
 
+enum PreferenceType {
+  HIGHERS
+  PLACEMENT
+  BOTH
+}
+
 model User {
   id           Int            @id @default(autoincrement())
   email        String         @unique
@@ -30,6 +36,20 @@ model User {
   updatedAt    DateTime       @default(now())
   testSessions TestSession[]
   results      Result[]
+  feedbacks    Feedback[]
+}
+
+model Feedback {
+  id         Int            @id @default(autoincrement())
+  userId     Int
+  user       User           @relation(fields: [userId], references: [id])
+  regNo      String
+  rating     Int // 1-5
+  feedback   String
+  preference PreferenceType
+  createdAt  DateTime       @default(now())
+
+  @@index([userId])
 }
 
 model TestSession {

@@ -7,7 +7,19 @@ export async function submitAnswersAndCalculateResult(
   dept: string,
 ) {
   try {
-    const CORE_CATEGORIES = ["CS", "IT", "EE"];
+    const CORE_CATEGORIES = [
+      "CS",
+      "IT",
+      "EE",
+      "EC",
+      "BT",
+      "AD",
+      "CH",
+      "MN",
+      "ME",
+      "AE",
+      "CE",
+    ];
 
     function resolveScoreBucket(category: string, dept: string) {
       const normalized = category.toUpperCase();

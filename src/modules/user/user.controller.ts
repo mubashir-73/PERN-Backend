@@ -148,7 +148,12 @@ export async function loginHandler(
 
 export async function studentSessionLoginHandler(
   request: FastifyRequest<{
-    Body: { email: string; sessionCode: string; name: string };
+    Body: {
+      email: string;
+      sessionCode: string;
+      name: string;
+      registerNo: string;
+    };
   }>,
   reply: FastifyReply,
 ) {

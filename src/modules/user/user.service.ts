@@ -163,10 +163,15 @@ export async function loginUser(input: LoginPayload, fastify: FastifyInstance) {
 }
 
 export async function loginStudentWithSessionCode(
-  input: { email: string; sessionCode: string; name: string },
+  input: {
+    email: string;
+    sessionCode: string;
+    name: string;
+    registerNo: string;
+  },
   fastify: FastifyInstance,
 ) {
-  const { email, sessionCode, name } = input;
+  const { email, sessionCode, name, registerNo } = input;
 
   // 1. Validate session code
   const session = await prisma.loginSession.findFirst({
@@ -189,6 +194,7 @@ export async function loginStudentWithSessionCode(
     update: {
       name,
       dept,
+      regNo: registerNo,
     },
     create: {
       email,

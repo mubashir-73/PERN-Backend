@@ -16,6 +16,7 @@ import { authGuard, adminGuard } from "./auth/auth.js";
 import resultRoutes from "./modules/results/results.route.js";
 import mulipart from "@fastify/multipart";
 import { adminRoutes } from "./modules/admin/admin.route.ts";
+import feedbackRoutes from "./modules/feedback/feedback.routes.ts";
 
 const server = Fastify().withTypeProvider<ZodTypeProvider>();
 server.setValidatorCompiler(validatorCompiler);
@@ -44,6 +45,7 @@ await server.register(oauthRoutes);
 await server.register(questionsRoutes, { prefix: "/api/questions" });
 await server.register(resultRoutes, { prefix: "/api/results" });
 await server.register(adminRoutes, { prefix: "/api/admin" });
+await server.register(feedbackRoutes, { prefix: "/api/feedback" });
 
 // Run the server!
 try {
