@@ -42,7 +42,6 @@ export async function submitAnswersHandler(
     if (error instanceof z.ZodError) {
       return reply.status(400).send({
         error: "Validation failed",
-        details: error.errors,
       });
     }
 

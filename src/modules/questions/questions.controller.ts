@@ -15,8 +15,8 @@ import {
   deleteTestSession,
 } from "./questions.service.js";
 import type { UserTokenPayload } from "../user/user.schema.js";
-import z from "zod";
-import { uploadImageToR2 } from "../r2Upload.service.ts";
+import { ZodError } from "zod";
+import { uploadImageToR2 } from "../r2Upload.service.js";
 
 export async function uploadImageHandler(
   request: FastifyRequest,
@@ -125,7 +125,7 @@ export async function createTestSessionHandler(
 }
 
 export async function getTestSessionHandler(
-  request: FastifyRequest, // <-- Add type
+  request: FastifyRequest,
   reply: FastifyReply,
 ) {
   try {
@@ -171,10 +171,9 @@ export async function UploadQuestionsHandler(
       type: validatedQuestion.type,
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof ZodError) {
       return reply.status(400).send({
         error: "Validation failed",
-        details: error.errors,
       });
     }
     console.error("Error uploading question:", error);
@@ -202,10 +201,9 @@ export async function BulkUploadQuestionsHandler(
       },
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof ZodError) {
       return reply.status(400).send({
         error: "Validation failed",
-        details: error.errors,
       });
     }
     console.error("Error bulk uploading questions:", error);
@@ -218,7 +216,8 @@ export async function DeleteTestSessionHandler(
   reply: FastifyReply,
 ) {
   try {
-    const userId = request.UserId;
+    const user = await request.jwtVerify<UserTokenPayload>();
+    const userId = user.id;
     const session = await deleteTestSession(userId);
     return reply.code(200).send(session);
   } catch (error) {
