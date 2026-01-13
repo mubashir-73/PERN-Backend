@@ -5,6 +5,7 @@ import {
   UploadQuestionsHandler,
   BulkUploadQuestionsHandler,
   DeleteTestSessionHandler,
+  uploadImageHandler,
 } from "./questions.controller.js";
 import {
   questionSchema,
@@ -62,6 +63,14 @@ async function questionsRoutes(server: FastifyInstance) {
       },
     },
     DeleteTestSessionHandler,
+  );
+
+  server.post(
+    "/upload-image",
+    {
+      onRequest: [authGuard, requireRole("BUILDER")],
+    },
+    uploadImageHandler,
   );
 }
 

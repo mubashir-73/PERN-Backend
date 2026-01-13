@@ -16,6 +16,69 @@ import {
 } from "./questions.service.js";
 import type { UserTokenPayload } from "../user/user.schema.js";
 import z from "zod";
+import { uploadImageToR2 } from "../r2Upload.service.ts";
+
+export async function uploadImageHandler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  try {
+    const data = await request.file();
+
+    if (!data) {
+      return reply.status(400).send({ message: "No file uploaded" });
+    }
+
+    // Validate file type
+    const allowedMimeTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
+    if (!allowedMimeTypes.includes(data.mimetype)) {
+      return reply.status(400).send({
+        message: "Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed",
+      });
+    }
+
+    // Validate file size (max 5MB)
+    const fileBuffer = await data.toBuffer();
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (fileBuffer.length > maxSize) {
+      return reply.status(400).send({
+        message: "File too large. Maximum size is 5MB",
+      });
+    }
+
+    // Upload to R2
+    const result = await uploadImageToR2(
+      fileBuffer,
+      data.filename,
+      data.mimetype,
+    );
+
+    if (!result.success) {
+      return reply.status(500).send({
+        message: "Failed to upload image",
+        error: result.error,
+      });
+    }
+
+    return reply.status(200).send({
+      success: true,
+      url: result.url,
+      message: "Image uploaded successfully",
+    });
+  } catch (error) {
+    console.error("Error in uploadImageHandler:", error);
+    return reply.status(500).send({
+      message: "Internal server error",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+}
 
 export async function createTestSessionHandler(
   request: FastifyRequest,
