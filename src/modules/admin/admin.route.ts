@@ -35,7 +35,15 @@ export async function adminRoutes(server: FastifyInstance) {
     {
       schema: {
         response: {
-          200: sessionStatusResponseSchema,
+          200: {
+	  type:'object',
+	  properties: {
+		  status: { type: 'string', enum: ['NOT_STARTED', 'ONGOING', 'ENDED', 'NO_SESSION'] },
+		  serverTime: { type: 'string' },
+		   endsAt: { type: 'string' },  // ❌ This doesn't allow null!
+		   remainingMs: { type: 'number' }  // ❌ This doesn't allow null!
+	  }
+	  },
           404: {
             type: "object",
             properties: {

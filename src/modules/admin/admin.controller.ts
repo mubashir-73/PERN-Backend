@@ -64,11 +64,17 @@ export async function getSessionStatusHandler(
 
     // No active session at all
     if (!session) {
+      console.log({
+        status: "NO_SESSION",
+        serverTime: now.toISOString(),
+        endsAt: null,
+        remainingMs: null, // Time until it starts
+      });
       return reply.code(200).send({
         status: "NO_SESSION",
         serverTime: now.toISOString(),
-        endsAt: undefined,
-        remainingMs: undefined,
+        endsAt: null,
+        remainingMs: null,
       });
     }
 
