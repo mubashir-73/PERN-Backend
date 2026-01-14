@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import bcrypt from "bcrypt";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -9,6 +10,16 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("🌱 Seeding database...");
+
+  const hashedPassword = await bcrypt.hash("forese2026@Mocks",10);
+  await prisma.user.create({
+	data:{
+	email:"admin@forese.co.in",
+	name:"foreseadmin",
+	password:hashedPassword,
+	role:"ADMIN",
+	}
+  })
 
   // ==============================
   // COMPREHENSION PASSAGES

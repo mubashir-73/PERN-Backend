@@ -99,7 +99,7 @@ export async function createUserHandler(
     reply.setCookie("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       path: "/",
       maxAge: 3 * 60 * 60,
     });
@@ -132,7 +132,7 @@ export async function loginHandler(
     reply.setCookie("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       path: "/",
       maxAge: 3 * 60 * 60, // Dynamic timing setting and through admin
     });
@@ -177,7 +177,7 @@ export async function studentSessionLoginHandler(
     reply.setCookie("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       path: "/",
       maxAge: 3 * 60 * 60,
     });
