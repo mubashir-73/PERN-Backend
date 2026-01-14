@@ -139,6 +139,12 @@ export async function createUser(
   const passwordHash = await fastify.bcrypt.hash(password);
   const user = await prisma.user.create({
     data: { ...rest, password: passwordHash },
+    select : {
+    id:true,
+    email:true,
+    name:true,
+    role:true,
+    },
   });
 
   return user;

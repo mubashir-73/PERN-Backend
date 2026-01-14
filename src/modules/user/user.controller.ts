@@ -100,6 +100,7 @@ export async function createUserHandler(
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "none",
+      partitioned: true,
       path: "/",
       maxAge: 3 * 60 * 60,
     });
@@ -133,6 +134,7 @@ export async function loginHandler(
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "none",
+      partitioned: true,
       path: "/",
       maxAge: 3 * 60 * 60, // Dynamic timing setting and through admin
     });
@@ -178,6 +180,7 @@ export async function studentSessionLoginHandler(
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "none",
+      partitioned: true,
       path: "/",
       maxAge: 3 * 60 * 60,
     });
