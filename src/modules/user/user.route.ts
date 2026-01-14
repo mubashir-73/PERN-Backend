@@ -16,6 +16,14 @@ import {
   type CreateUserPayload,
 } from "./user.schema.js";
 import type { RouteGenericInterface } from "fastify";
+import z from "zod";
+
+const CreateUserResponse = z.object({
+  id: z.number(),
+  email: z.string(),
+  name: z.string(),
+  role: z.string(),
+});
 
 interface CreateUserRoute extends RouteGenericInterface {
   Body: CreateUserPayload;
@@ -50,15 +58,7 @@ async function userRoutes(server: FastifyInstance) {
       schema: {
         body: CreateUserSchema,
         response: {
-          201: {
-            type: "object",
-            properties: {
-              id: { type: "number" },
-              email: { type: "string" },
-              name: { type: "string" },
-              role: { enum: ["BUILDER", "STUDENT", "ADMIN"] }, //This will be set by the api call based on interface in frontend
-            },
-          },
+          201: CreateUserResponse,
         },
       },
     },
