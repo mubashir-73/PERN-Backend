@@ -67,7 +67,6 @@ export async function getSessionStatusHandler(
       return reply.code(200).send({
         status: "NO_SESSION",
         serverTime: now.toISOString(),
-        endsAt: null,
       });
     }
 
