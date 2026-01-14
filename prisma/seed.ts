@@ -20,7 +20,14 @@ async function main() {
 	role:"ADMIN",
 	}
   })
-
+ await prisma.user.create({
+	data:{
+	email:"builder@forese.co.in",
+	name:"Builder",
+	password:hashedPassword,
+	role:"BUILDER",
+	}
+  })
   // ==============================
   // COMPREHENSION PASSAGES
   // ==============================
