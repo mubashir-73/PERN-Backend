@@ -67,25 +67,21 @@ export async function getSessionStatusHandler(
       return reply.code(200).send({
         status: "NO_SESSION",
         serverTime: now.toISOString(),
+        endsAt: undefined,
+        remainingMs: undefined,
       });
     }
 
     const startsAt = session.startsAt;
     const endsAt = session.endsAt;
 
-    // Debug log (optional, remove later)
-    console.log({
-      serverNowUTC: now.toISOString(),
-      startsAtUTC: startsAt.toISOString(),
-      endsAtUTC: endsAt.toISOString(),
-    });
-
     // Not started yet
     if (now < startsAt) {
       return reply.code(200).send({
         status: "NOT_STARTED",
         serverTime: now.toISOString(),
-        startsAt: startsAt.toISOString(),
+        endsAt: endsAt.toISOString(),
+        remainingMs: startsAt.getTime() - now.getTime(), // Time until it starts
       });
     }
 
@@ -95,6 +91,7 @@ export async function getSessionStatusHandler(
         status: "ENDED",
         serverTime: now.toISOString(),
         endsAt: endsAt.toISOString(),
+        remainingMs: 0,
       });
     }
 
