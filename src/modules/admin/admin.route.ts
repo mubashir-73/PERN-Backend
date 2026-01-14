@@ -4,7 +4,7 @@ import {
   createExamSessionHandler,
   getSessionStatusHandler,
   setSessionCodeHandler,
-} from "./admin.controller.ts";
+} from "./admin.controller.js";
 
 import {
   createExamSessionBodySchema,
@@ -12,7 +12,7 @@ import {
   sessionStatusOngoingSchema,
   setSessionCodeBodySchema,
   setSessionCodeResponseSchema,
-} from "./admin.schema.ts";
+} from "./admin.schema.js";
 import { z } from "zod";
 
 export const sessionStatusResponseSchema = z.union([

@@ -2,8 +2,8 @@ import prisma from "../../utils/prisma.js";
 import type {
   QuestionUploadPayload,
   BulkQuestionUploadPayload,
-} from "./questions.schema.ts";
-import type { QuestionPayload } from "./questions.schema.ts";
+} from "./questions.schema.js";
+import type { QuestionPayload } from "./questions.schema.js";
 
 function shuffleArray<T>(array: readonly T[]): T[] {
   const shuffled = [...array];

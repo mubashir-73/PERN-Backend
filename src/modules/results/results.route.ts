@@ -3,7 +3,7 @@ import {
   submitAnswersHandler,
   getResultHandler,
   getAllResultsHandler,
-} from "./results.controller.ts";
+} from "./results.controller.js";
 import { z } from "zod";
 import { authGuard, requireRole } from "../../auth/auth.js";
 

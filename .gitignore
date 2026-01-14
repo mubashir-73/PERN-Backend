@@ -11,5 +11,4 @@ client_secret_*.json
 
 /src/generated/prisma
 *.swp
-\
 .env

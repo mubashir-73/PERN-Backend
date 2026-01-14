@@ -1,4 +1,4 @@
-import type { SubmitAnswersPayload } from "./results.schema.ts";
+import type { SubmitAnswersPayload } from "./results.schema.js";
 import prisma from "../../utils/prisma.js";
 
 export async function submitAnswersAndCalculateResult(

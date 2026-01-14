@@ -1,7 +1,7 @@
 import prisma from "../../utils/prisma.js";
-import type { CreateUserPayload } from "./user.schema.ts";
+import type { CreateUserPayload } from "./user.schema.js";
 import type { FastifyInstance } from "fastify";
-import type { LoginPayload, UserBulkPayload } from "./user.schema.ts";
+import type { LoginPayload, UserBulkPayload } from "./user.schema.js";
 import bcrypt from "bcrypt";
 import { extractDeptFromEmail } from "../../utils/extractDept.js";
 

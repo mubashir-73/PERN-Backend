@@ -1,11 +1,11 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
-import { submitAnswersSchema } from "./results.schema.ts";
+import { submitAnswersSchema } from "./results.schema.js";
 import {
   submitAnswersAndCalculateResult,
   getResultBySessionId,
   getAllResultsByUserId,
-} from "./results.service.ts";
+} from "./results.service.js";
 import type { UserTokenPayload } from "../user/user.schema.js";
 
 // Submit answers endpoint

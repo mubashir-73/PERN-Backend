@@ -13,7 +13,19 @@ services:
     build: .
     image: fastify-server
     ports:
-      - 13000:3000
+      - 3000:3000
+    env_file:
+        - .env
+
+  studio:
+    image: fastify-server
+    command: npx prisma studio --port 5555 --browser none
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:5555:5555"
+    depends_on:
+      - db
 
 volumes:
   tutorial-db-data:

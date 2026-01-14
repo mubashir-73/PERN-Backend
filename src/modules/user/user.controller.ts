@@ -8,7 +8,7 @@ import {
   bulkCreateUsers,
 } from "./user.service.js";
 import type { CreateUserPayload, LoginPayload } from "./user.schema.js";
-import { sessionResponseSchema, userBulkSchema } from "./user.schema.ts";
+import { sessionResponseSchema, userBulkSchema } from "./user.schema.js";
 import type { UserTokenPayload } from "./user.schema.js";
 import { loginStudentWithSessionCode } from "./user.service.js";
 import type { RouteGenericInterface } from "fastify";

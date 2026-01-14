@@ -4,7 +4,7 @@ import Fastify from "fastify";
 import userRoutes from "./modules/user/user.route.js";
 import oauthRoutes from "./auth/oauth.route.js";
 import questionsRoutes from "./modules/questions/questions.route.js";
-import bcryptPlugin from "./plugins/bcrypt.ts";
+import bcryptPlugin from "./plugins/bcrypt.js";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import {
   serializerCompiler,
@@ -15,12 +15,17 @@ import fastifyCookie from "@fastify/cookie";
 import { authGuard, adminGuard } from "./auth/auth.js";
 import resultRoutes from "./modules/results/results.route.js";
 import mulipart from "@fastify/multipart";
-import { adminRoutes } from "./modules/admin/admin.route.ts";
-import feedbackRoutes from "./modules/feedback/feedback.routes.ts";
+import { adminRoutes } from "./modules/admin/admin.route.js";
+import feedbackRoutes from "./modules/feedback/feedback.routes.js";
+import cors from "@fastify/cors";
 
 const server = Fastify().withTypeProvider<ZodTypeProvider>();
 server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
+await server.register(cors, {
+origin:true,
+credentials:true,
+})
 await server.register(fastifyCookie);
 await server.register(fastifyJwt, {
   secret: process.env.JWT_SECRET!,

@@ -4,8 +4,8 @@ import {
   getActiveExamSession,
   calculateRemainingTime,
   setSessionCodeByAdmin,
-} from "./admin.service.ts";
-import { requireAdmin } from "../../utils/requireAdmin.ts";
+} from "./admin.service.js";
+import { requireAdmin } from "../../utils/requireAdmin.js";
 
 export async function createExamSessionHandler(
   request: FastifyRequest<{
