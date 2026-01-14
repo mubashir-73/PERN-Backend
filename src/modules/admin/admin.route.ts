@@ -12,13 +12,9 @@ import {
   sessionStatusOngoingSchema,
   setSessionCodeBodySchema,
   setSessionCodeResponseSchema,
+  sessionStatusResponseSchema,
 } from "./admin.schema.js";
 import { z } from "zod";
-
-export const sessionStatusResponseSchema = z.union([
-  sessionStatusOngoingSchema,
-  sessionStatusBaseSchema,
-]);
 
 export async function adminRoutes(server: FastifyInstance) {
   server.post(
@@ -35,18 +31,7 @@ export async function adminRoutes(server: FastifyInstance) {
     {
       schema: {
         response: {
-          200: {
-            type: "object",
-            properties: {
-              status: {
-                type: "string",
-                enum: ["NOT_STARTED", "ONGOING", "ENDED", "NO_SESSION"],
-              },
-              serverTime: { type: "string" },
-              endsAt: { type: ["string", "null"] }, // ❌ This doesn't allow null!
-              remainingMs: { type: ["number", "null"] }, // ❌ This doesn't allow null!
-            },
-          },
+          200: sessionStatusResponseSchema,
           404: {
             type: "object",
             properties: {

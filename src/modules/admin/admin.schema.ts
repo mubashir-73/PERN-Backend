@@ -41,3 +41,10 @@ export const setSessionCodeResponseSchema = z.object({
   message: z.string(),
   sessionCode: z.string(),
 });
+
+export const sessionStatusResponseSchema = z.object({
+  status: z.enum(["NOT_STARTED", "ONGOING", "ENDED", "NO_SESSION"]),
+  serverTime: z.string(),
+  endsAt: z.string().nullable(),
+  remainingMs: z.number().nullable(),
+});
