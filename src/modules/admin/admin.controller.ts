@@ -77,6 +77,12 @@ export async function getSessionStatusHandler(
 
     // Not started yet
     if (now < startsAt) {
+      console.log({
+        status: "NOT_STARTED",
+        serverTime: now.toISOString(),
+        endsAt: endsAt.toISOString(),
+        remainingMs: startsAt.getTime() - now.getTime(), // Time until it starts
+      });
       return reply.code(200).send({
         status: "NOT_STARTED",
         serverTime: now.toISOString(),
@@ -87,6 +93,12 @@ export async function getSessionStatusHandler(
 
     // Already ended
     if (now >= endsAt) {
+      console.log({
+        status: "ENDED",
+        serverTime: now.toISOString(),
+        endsAt: endsAt.toISOString(),
+        remainingMs: 0,
+      });
       return reply.code(200).send({
         status: "ENDED",
         serverTime: now.toISOString(),
@@ -94,6 +106,13 @@ export async function getSessionStatusHandler(
         remainingMs: 0,
       });
     }
+
+    console.log({
+      status: "ONGOING",
+      serverTime: now.toISOString(),
+      endsAt: endsAt.toISOString(),
+      remainingMs: endsAt.getTime() - now.getTime(),
+    });
 
     // Ongoing
     return reply.code(200).send({
