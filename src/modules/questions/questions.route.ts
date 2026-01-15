@@ -55,7 +55,7 @@ async function questionsRoutes(server: FastifyInstance) {
   );
 
   server.post(
-    "/deleteSession/",
+    "/deleteSession",
     {
       onRequest: [authGuard, requireRole("ADMIN")],
       schema: {
