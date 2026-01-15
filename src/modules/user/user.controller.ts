@@ -201,17 +201,33 @@ export async function studentSessionLoginHandler(
 export async function deleteUserHandler(request: any, reply: any) {
   const userId = Number(request.params.userId);
 
+  console.log("=== DELETE USER DEBUG ===");
+  console.log("User ID:", userId);
+
   if (isNaN(userId)) {
     return reply.status(400).send({ message: "Invalid user ID" });
   }
 
   try {
-    await deleteUserById(userId);
+    const result = await deleteUserById(userId);
+    console.log("Delete successful:", result);
     return reply.send({ message: "User deleted successfully" });
   } catch (error) {
-    request.log.error(error);
-    return reply.status(500).send({
-      message: "Failed to delete user",
-    });
+    console.error("=== DELETE USER ERROR ===");
+
+    // Type guard for Error objects
+    if (error instanceof Error) {
+      console.error("Error type:", error.constructor.name);
+      console.error("Error message:", error.message);
+      console.error("Error code:", (error as any).code);
+      console.error("Full error:", error);
+
+      request.log.error(error);
+      return reply.status(500).send({
+        message: "Failed to delete user",
+        error: error.message,
+        code: (error as any).code,
+      });
+    }
   }
 }
