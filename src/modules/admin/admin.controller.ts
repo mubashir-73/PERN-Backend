@@ -4,6 +4,7 @@ import {
   getActiveExamSession,
   calculateRemainingTime,
   setSessionCodeByAdmin,
+  getSessionCodeByAdmin,
 } from "./admin.service.js";
 import { requireAdmin } from "../../utils/requireAdmin.js";
 
@@ -59,6 +60,8 @@ export async function getSessionStatusHandler(
   reply: FastifyReply,
 ) {
   try {
+    if (!(await requireAdmin(request, reply))) return;
+
     const session = await getActiveExamSession();
     const now = new Date();
 
@@ -131,6 +134,24 @@ export async function getSessionStatusHandler(
     console.error("Error getting session status:", err);
     return reply.code(500).send({
       message: "Failed to get session status",
+    });
+  }
+}
+
+export async function getSessionCodeHandler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  try {
+    const session = await getSessionCodeByAdmin();
+
+    return reply.code(200).send({
+      sessionCode: session.code,
+    });
+  } catch (err) {
+    console.error("Error getting session code:", err);
+    return reply.code(500).send({
+      message: "Failed to get session code",
     });
   }
 }

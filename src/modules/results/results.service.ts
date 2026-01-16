@@ -36,9 +36,9 @@ export async function submitAnswersAndCalculateResult(
       const session = await tx.testSession.findFirst({
         where: {
           id: payload.sessionId,
-          UserId: userId,
-          CompletedAt: null,
-          ExpiresAt: { gt: new Date() },
+          userId: userId,
+          completedAt: null,
+          expiresAt: { gt: new Date() },
         },
         include: {
           questions: {
@@ -154,7 +154,7 @@ export async function submitAnswersAndCalculateResult(
       // 10. Close session
       await tx.testSession.update({
         where: { id: payload.sessionId },
-        data: { CompletedAt: new Date() },
+        data: { completedAt: new Date() },
       });
 
       return {
@@ -189,8 +189,8 @@ export async function getResultBySessionId(sessionId: number, userId: number) {
       session: {
         select: {
           id: true,
-          StartedAt: true,
-          CompletedAt: true,
+          startedAt: true,
+          completedAt: true,
         },
       },
     },
@@ -205,8 +205,8 @@ export async function getAllResultsByUserId(userId: number) {
       session: {
         select: {
           id: true,
-          StartedAt: true,
-          CompletedAt: true,
+          startedAt: true,
+          completedAt: true,
         },
       },
     },

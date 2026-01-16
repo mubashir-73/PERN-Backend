@@ -47,19 +47,35 @@ export async function getAllUsers() {
       role: true,
       createdAt: true,
       testSessions: {
-        select: { id: true },
+        select: {
+          id: true,
+          sessionCode: true,
+          completedAt: true,
+        },
       },
     },
   });
 
-  return users.map((u) => ({
-    id: u.id,
-    email: u.email,
-    name: u.name,
-    role: u.role,
-    createdAt: u.createdAt.toISOString(),
-    testSessionIds: u.testSessions.map((s) => s.id),
-  }));
+  return users.map((u) => {
+    const session = u.testSessions[0] ?? null;
+
+    return {
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      role: u.role,
+      createdAt: u.createdAt.toISOString(),
+      testSession: session
+        ? {
+            id: session.id,
+            sessionCode: session.sessionCode,
+            completedAt: session.completedAt
+              ? session.completedAt.toISOString()
+              : null,
+          }
+        : null,
+    };
+  });
 }
 
 export async function getUserById(id: number) {
@@ -107,13 +123,13 @@ export async function deleteUserById(userId: number) {
 
     // Check how many test sessions this user has
     const sessionCount = await tx.testSession.count({
-      where: { UserId: userId },
+      where: { userId: userId },
     });
     console.log("Test sessions:", sessionCount);
 
     // 2. Get user's test sessions
     const sessions = await tx.testSession.findMany({
-      where: { UserId: userId },
+      where: { userId: userId },
       select: { id: true },
     });
 

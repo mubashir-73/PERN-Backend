@@ -174,6 +174,7 @@ export async function studentSessionLoginHandler(
       email: user.email,
       role: user.role,
       dept: user.dept,
+      sessionCode: request.body.sessionCode,
     });
 
     reply.setCookie("access_token", token, {

@@ -1,12 +1,18 @@
 import { array, z } from "zod";
 
+export const testSessionSchema = z.object({
+  id: z.number(),
+  sessionCode: z.string(),
+  completedAt: z.string().nullable(),
+});
+
 export const getUserSchema = z.object({
   id: z.number(),
   email: z.string(),
   name: z.string().nullable(),
   role: z.enum(["ADMIN", "STUDENT", "BUILDER"]),
-  createdAt: z.string(), // ISO string
-  testSessionIds: z.array(z.number()),
+  createdAt: z.string(),
+  testSession: testSessionSchema.nullable(),
 });
 
 export const sessionCodeSchema = z.object({
@@ -50,6 +56,7 @@ export const userTokenSchema = z.object({
   email: z.string(),
   role: z.enum(["ADMIN", "STUDENT", "BUILDER"]),
   dept: z.string(), //proper enum provide here
+  sessionCode: z.string(),
 });
 
 export const loginSchema = z.object({

@@ -87,6 +87,7 @@ export async function createTestSessionHandler(
   try {
     const user = await request.jwtVerify<UserTokenPayload>();
     const userId = user.id;
+    const sessionCode = user.sessionCode;
     console.log("User:", user);
     console.log("User dept:", user.dept);
     const dept = user.dept;
@@ -106,7 +107,7 @@ export async function createTestSessionHandler(
     }
     console.log("Creating test session for user:", userId);
 
-    const session = await createTestSession(userId, dept);
+    const session = await createTestSession(userId, dept, sessionCode);
 
     if (!session) {
       console.log("Failed to create test session");

@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 
 import {
   createExamSessionHandler,
+  getSessionCodeHandler,
   getSessionStatusHandler,
   setSessionCodeHandler,
 } from "./admin.controller.js";
@@ -13,8 +14,10 @@ import {
   setSessionCodeBodySchema,
   setSessionCodeResponseSchema,
   sessionStatusResponseSchema,
+  getSessionCodeResponseSchema,
 } from "./admin.schema.js";
 import { z } from "zod";
+import { adminGuard } from "../../auth/auth.js";
 
 export async function adminRoutes(server: FastifyInstance) {
   server.post(
@@ -54,5 +57,17 @@ export async function adminRoutes(server: FastifyInstance) {
       },
     },
     setSessionCodeHandler,
+  );
+  server.get(
+    "/session-code",
+    {
+      onRequest: [adminGuard],
+      schema: {
+        response: {
+          200: getSessionCodeResponseSchema,
+        },
+      },
+    },
+    getSessionCodeHandler,
   );
 }

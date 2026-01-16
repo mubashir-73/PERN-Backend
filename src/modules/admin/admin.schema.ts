@@ -37,6 +37,10 @@ export const setSessionCodeBodySchema = z.object({
   code: z.string().min(4),
 });
 
+export const getSessionCodeResponseSchema = z.object({
+  sessionCode: z.string(),
+});
+
 export const setSessionCodeResponseSchema = z.object({
   message: z.string(),
   sessionCode: z.string(),

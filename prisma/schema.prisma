@@ -22,6 +22,12 @@ enum PreferenceType {
   BOTH
 }
 
+enum TestSessionStatus {
+  ONGOING
+  COMPLETED
+}
+
+
 model User {
   id           Int            @id @default(autoincrement())
   email        String         @unique
@@ -52,16 +58,24 @@ model Feedback {
   @@index([userId])
 }
 
-model TestSession {
-  id     Int  @id @default(autoincrement())
-  UserId Int
-  user   User @relation(fields: [UserId], references: [id])
 
-  StartedAt   DateTime              @default(now())
-  CompletedAt DateTime?
-  ExpiresAt   DateTime              @default(now())
+model TestSession {
+  id        Int  @id @default(autoincrement())
+
+  userId    Int   @unique
+  user      User  @relation(fields: [userId], references: [id])
+
+  sessionCode String
+  status      TestSessionStatus @default(ONGOING)
+
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+  expiresAt   DateTime
+
   questions   TestSessionQuestion[]
   result      Result?
+
+  @@index([sessionCode, status])
 }
 
 model TestSessionQuestion {

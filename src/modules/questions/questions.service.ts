@@ -19,8 +19,8 @@ function shuffleArray<T>(array: readonly T[]): T[] {
 export async function getActiveSessionByUserId(userId: number) {
   return await prisma.testSession.findFirst({
     where: {
-      UserId: userId,
-      ExpiresAt: {
+      userId: userId,
+      expiresAt: {
         gt: new Date(),
       },
     },
@@ -42,9 +42,9 @@ export async function checkForActiveSessionConflict(userId: number) {
   try {
     const activeSession = await prisma.testSession.findFirst({
       where: {
-        UserId: userId,
-        CompletedAt: null, // Session is not completed
-        ExpiresAt: {
+        userId: userId,
+        completedAt: null, // Session is not completed
+        expiresAt: {
           gt: new Date(), // AND not expired
         },
       },
@@ -60,7 +60,7 @@ export async function checkForActiveSessionConflict(userId: number) {
 export async function alreadyCompletedSession(userId: number) {
   const session = await prisma.testSession.findFirst({
     where: {
-      UserId: userId,
+      userId: userId,
     },
     select: {
       id: true,
@@ -70,7 +70,11 @@ export async function alreadyCompletedSession(userId: number) {
   return !!session; // true if exists, false if not
 }
 
-export async function createTestSession(userId: number, dept: string) {
+export async function createTestSession(
+  userId: number,
+  dept: string,
+  sessionCode: string,
+) {
   const distribution = {
     Aptitude: 10,
     Verbal: 5,
@@ -87,8 +91,9 @@ export async function createTestSession(userId: number, dept: string) {
       // Create the session
       const session = await tx.testSession.create({
         data: {
-          UserId: userId,
-          ExpiresAt: expiresAt,
+          userId: userId,
+          sessionCode: sessionCode,
+          expiresAt: expiresAt,
         },
       });
 
@@ -174,7 +179,7 @@ export async function createTestSession(userId: number, dept: string) {
       const completeSession = await tx.testSession.findFirst({
         where: {
           id: session.id,
-          UserId: userId,
+          userId: userId,
         },
         include: {
           questions: {
@@ -211,9 +216,9 @@ export async function createTestSession(userId: number, dept: string) {
       // Transform the data
       const transformedSession = {
         sessionId: completeSession.id,
-        userId: completeSession.UserId,
-        startedAt: completeSession.StartedAt,
-        expiresAt: completeSession.ExpiresAt,
+        userId: completeSession.userId,
+        startedAt: completeSession.startedAt,
+        expiresAt: completeSession.expiresAt,
         questions: completeSession.questions.map((sq) => {
           const question = sq.question;
 
@@ -262,7 +267,7 @@ export async function getTestSessionById(sessionId: number, userId: number) {
     const completeSession = await tx.testSession.findFirst({
       where: {
         id: sessionId,
-        UserId: userId,
+        userId: userId,
       },
       include: {
         questions: {
@@ -298,9 +303,9 @@ export async function getTestSessionById(sessionId: number, userId: number) {
     // 🔥 Same transformation logic as createTestSession
     const transformedSession = {
       sessionId: completeSession.id,
-      userId: completeSession.UserId,
-      startedAt: completeSession.StartedAt,
-      expiresAt: completeSession.ExpiresAt,
+      userId: completeSession.userId,
+      startedAt: completeSession.startedAt,
+      expiresAt: completeSession.expiresAt,
       questions: completeSession.questions.map((sq) => {
         const question = sq.question;
 
@@ -528,7 +533,7 @@ export async function deleteTestSession(userId: number) {
     return await prisma.$transaction(async (tx) => {
       // 1. Get ALL sessions for the user (edge-case safe)
       const sessions = await tx.testSession.findMany({
-        where: { UserId: userId },
+        where: { userId: userId },
         select: { id: true },
       });
 

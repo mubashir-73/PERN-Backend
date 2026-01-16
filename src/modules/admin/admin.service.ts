@@ -69,3 +69,10 @@ export async function setSessionCodeByAdmin(code: string) {
     return session;
   });
 }
+
+export async function getSessionCodeByAdmin() {
+  return prisma.loginSession.findFirst({
+    where: { isActive: true },
+    select: { code: true },
+  });
+}
