@@ -60,8 +60,6 @@ export async function getSessionStatusHandler(
   reply: FastifyReply,
 ) {
   try {
-    if (!(await requireAdmin(request, reply))) return;
-
     const session = await getActiveExamSession();
     const now = new Date();
 
