@@ -144,6 +144,11 @@ export async function getSessionCodeHandler(
 ) {
   try {
     const session = await getSessionCodeByAdmin();
+    if (!session) {
+      return reply.code(404).send({
+        message: "No session code found",
+      });
+    }
 
     return reply.code(200).send({
       sessionCode: session.code,
