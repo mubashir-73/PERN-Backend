@@ -28,9 +28,7 @@ async function main() {
       role: "BUILDER",
     },
   });
-  // ==============================
-  // COMPREHENSION PASSAGES
-  // ==============================
+
   await prisma.comprehension.create({
     data: {
       passage:
@@ -177,12 +175,7 @@ async function main() {
       },
     },
   });
-
-  // ==============================
-  // REGULAR QUESTIONS
-  // ==============================
   const regularQuestions = [
-    // Aptitude Questions
     {
       category: "Aptitude",
       question: "What is 25% of 200?",
@@ -245,8 +238,6 @@ async function main() {
       correctOptionId: 2,
       options: ["24", "13", "16", "8"],
     },
-
-    // Verbal Questions
     {
       category: "Verbal",
       question: "Choose the synonym of 'eloquent'.",
@@ -317,8 +308,6 @@ async function main() {
         "A letter has written by him.",
       ],
     },
-
-    // Computer Science Questions
     {
       category: "CS",
       question: "What is the time complexity of binary search?",
@@ -469,7 +458,6 @@ async function main() {
       options: ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
     },
 
-    // Programming Questions
     {
       category: "Programming",
       question: "Which keyword declares a constant in JavaScript?",
@@ -550,8 +538,6 @@ async function main() {
       correctOptionId: 3,
       options: ["=", "==", "===", "!="],
     },
-
-    // AI and Data Science Questions
     {
       category: "AD",
       question: "What does ML stand for in AI?",
@@ -637,8 +623,181 @@ async function main() {
       correctOptionId: 3,
       options: ["Sigmoid", "Softmax", "ReLU", "Linear"],
     },
-
-    // Information Technology Questions
+    {
+      category: "AD",
+      question: "What is the purpose of backpropagation in neural networks?",
+      correctOptionId: 2,
+      options: [
+        "To feed data forward",
+        "To adjust weights during training",
+        "To prevent overfitting",
+        "To normalize inputs",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which technique is used to reduce overfitting?",
+      correctOptionId: 3,
+      options: ["Increasing model complexity", "Adding more layers", "Dropout", "Removing validation data"],
+    },
+    {
+      category: "AD",
+      question: "What does LSTM stand for?",
+      correctOptionId: 1,
+      options: [
+        "Long Short-Term Memory",
+        "Linear System Time Model",
+        "Large Scale Training Method",
+        "Loop Sequential Training Model",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which algorithm is best for finding patterns in unlabeled data?",
+      correctOptionId: 4,
+      options: ["Linear Regression", "Decision Tree", "SVM", "K-Means Clustering"],
+    },
+    {
+      category: "AD",
+      question: "What is gradient descent used for?",
+      correctOptionId: 2,
+      options: [
+        "Data preprocessing",
+        "Minimizing loss function",
+        "Feature selection",
+        "Model evaluation",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which metric is NOT used for regression problems?",
+      correctOptionId: 3,
+      options: ["MSE", "RMSE", "F1-Score", "R-squared"],
+    },
+    {
+      category: "AD",
+      question: "What is the vanishing gradient problem?",
+      correctOptionId: 1,
+      options: [
+        "Gradients become very small in deep networks",
+        "Gradients become too large",
+        "Loss function doesn't converge",
+        "Data becomes corrupted",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which activation function can output negative values?",
+      correctOptionId: 4,
+      options: ["ReLU", "Sigmoid", "Softmax", "Tanh"],
+    },
+    {
+      category: "AD",
+      question: "What is cross-validation used for?",
+      correctOptionId: 2,
+      options: [
+        "Training the model",
+        "Assessing model performance",
+        "Cleaning data",
+        "Feature engineering",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which type of learning uses reward-based feedback?",
+      correctOptionId: 3,
+      options: ["Supervised", "Unsupervised", "Reinforcement", "Semi-supervised"],
+    },
+    {
+      category: "AD",
+      question: "What does GAN stand for?",
+      correctOptionId: 1,
+      options: [
+        "Generative Adversarial Network",
+        "General Automated Network",
+        "Gradient Approximation Network",
+        "Global Analysis Network",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which library is primarily used for data manipulation in Python?",
+      correctOptionId: 2,
+      options: ["TensorFlow", "Pandas", "Keras", "Scikit-learn"],
+    },
+    {
+      category: "AD",
+      question: "What is the purpose of a confusion matrix?",
+      correctOptionId: 3,
+      options: [
+        "To visualize training loss",
+        "To show data distribution",
+        "To evaluate classification performance",
+        "To normalize features",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which technique is used for dimensionality reduction?",
+      correctOptionId: 4,
+      options: ["K-Means", "Random Forest", "Naive Bayes", "Principal Component Analysis"],
+    },
+    {
+      category: "AD",
+      question: "What is the main purpose of regularization?",
+      correctOptionId: 1,
+      options: [
+        "Prevent overfitting",
+        "Increase training speed",
+        "Reduce data size",
+        "Improve accuracy on training data",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which is a popular framework for building neural networks?",
+      correctOptionId: 2,
+      options: ["NumPy", "PyTorch", "Matplotlib", "Pandas"],
+    },
+    {
+      category: "AD",
+      question: "What does BERT stand for in NLP?",
+      correctOptionId: 3,
+      options: [
+        "Basic Encoding Representation Technique",
+        "Binary Encoded Recurrent Transformer",
+        "Bidirectional Encoder Representations from Transformers",
+        "Base Embedding Recursive Training",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which optimizer is commonly used in deep learning?",
+      correctOptionId: 1,
+      options: ["Adam", "Bubble Sort", "Linear Search", "Binary Tree"],
+    },
+    {
+      category: "AD",
+      question: "What is transfer learning?",
+      correctOptionId: 4,
+      options: [
+        "Moving data between systems",
+        "Converting file formats",
+        "Transferring weights manually",
+        "Using pre-trained models for new tasks",
+      ],
+    },
+    {
+      category: "AD",
+      question: "Which technique handles imbalanced datasets?",
+      correctOptionId: 2,
+      options: [
+        "Removing all minority samples",
+        "SMOTE (Synthetic Minority Over-sampling)",
+        "Increasing learning rate",
+        "Adding more layers",
+      ],
+    },
     {
       category: "IT",
       question: "What does VPN stand for?",
@@ -719,8 +878,167 @@ async function main() {
       correctOptionId: 2,
       options: ["POST", "GET", "PUT", "DELETE"],
     },
+    {
+      category: "IT",
+      question: "What is the maximum length of an IPv4 address?",
+      correctOptionId: 3,
+      options: ["16 bits", "24 bits", "32 bits", "64 bits"],
+    },
+    {
+      category: "IT",
+      question: "Which layer of OSI model handles encryption?",
+      correctOptionId: 4,
+      options: ["Network", "Transport", "Application", "Presentation"],
+    },
+    {
+      category: "IT",
+      question: "What does REST stand for in web services?",
+      correctOptionId: 2,
+      options: [
+        "Remote Execution Service Tool",
+        "Representational State Transfer",
+        "Rapid Exchange System Technology",
+        "Resource Embedded System Transfer",
+      ],
+    },
+    {
+      category: "IT",
+      question: "Which database uses tables to store data?",
+      correctOptionId: 1,
+      options: ["Relational Database", "Graph Database", "Document Database", "Key-Value Store"],
+    },
+    {
+      category: "IT",
+      question: "What is the purpose of a load balancer?",
+      correctOptionId: 3,
+      options: [
+        "Store data",
+        "Encrypt traffic",
+        "Distribute traffic across servers",
+        "Monitor network speed",
+      ],
+    },
+    {
+      category: "IT",
+      question: "Which protocol is used for file transfer?",
+      correctOptionId: 2,
+      options: ["HTTP", "FTP", "SMTP", "DNS"],
+    },
+    {
+      category: "IT",
+      question: "What does CDN stand for?",
+      correctOptionId: 4,
+      options: [
+        "Central Data Network",
+        "Computer Distribution Network",
+        "Core Domain Network",
+        "Content Delivery Network",
+      ],
+    },
+    {
+      category: "IT",
+      question: "Which is a containerization platform?",
+      correctOptionId: 1,
+      options: ["Docker", "Apache", "MySQL", "Nginx"],
+    },
+    {
+      category: "IT",
+      question: "What is the default port for HTTPS?",
+      correctOptionId: 3,
+      options: ["80", "8080", "443", "22"],
+    },
+    {
+      category: "IT",
+      question: "Which command is used to test network connectivity?",
+      correctOptionId: 2,
+      options: ["ipconfig", "ping", "tracert", "netstat"],
+    },
+    {
+      category: "IT",
+      question: "What does SQL stand for?",
+      correctOptionId: 1,
+      options: [
+        "Structured Query Language",
+        "Simple Query Language",
+        "System Query Language",
+        "Standard Queue Language",
+      ],
+    },
+    {
+      category: "IT",
+      question: "Which encryption algorithm is symmetric?",
+      correctOptionId: 4,
+      options: ["RSA", "DSA", "ECC", "AES"],
+    },
+    {
+      category: "IT",
+      question: "What is the purpose of DNS?",
+      correctOptionId: 2,
+      options: [
+        "Encrypt data",
+        "Translate domain names to IP addresses",
+        "Route packets",
+        "Monitor bandwidth",
+      ],
+    },
+    {
+      category: "IT",
+      question: "Which is a version control system?",
+      correctOptionId: 3,
+      options: ["Apache", "MySQL", "Git", "Docker"],
+    },
+    {
+      category: "IT",
+      question: "What does CRUD stand for in database operations?",
+      correctOptionId: 1,
+      options: [
+        "Create, Read, Update, Delete",
+        "Copy, Remove, Upload, Download",
+        "Connect, Retrieve, Use, Disconnect",
+        "Compile, Run, Use, Debug",
+      ],
+    },
+    {
+      category: "IT",
+      question: "Which protocol is connectionless?",
+      correctOptionId: 2,
+      options: ["TCP", "UDP", "HTTP", "FTP"],
+    },
+    {
+      category: "IT",
+      question: "What is the purpose of a subnet mask?",
+      correctOptionId: 4,
+      options: [
+        "Encrypt data",
+        "Route packets",
+        "Assign IP addresses",
+        "Divide network into subnets",
+      ],
+    },
+    {
+      category: "IT",
+      question: "Which HTTP status code indicates success?",
+      correctOptionId: 1,
+      options: ["200", "404", "500", "301"],
+    },
+    {
+      category: "IT",
+      question: "What does JWT stand for?",
+      correctOptionId: 3,
+      options: [
+        "Java Web Token",
+        "JavaScript Web Tool",
+        "JSON Web Token",
+        "Joint Web Technology",
+      ],
+    },
+    {
+      category: "IT",
+      question: "Which cloud provider offers EC2 instances?",
+      correctOptionId: 2,
+      options: ["Google Cloud", "AWS", "Azure", "IBM Cloud"],
+    },
 
-    // Electronics and Communication Engineering Questions
     {
       category: "EC",
       question: "What does AM stand for in communication?",
@@ -806,8 +1124,166 @@ async function main() {
       correctOptionId: 1,
       options: ["Rectifier", "Inverter", "Transformer", "Amplifier"],
     },
-
-    // Electrical and Electronics Engineering Questions
+    {
+      category: "EC",
+      question: "What is the function of a modulator?",
+      correctOptionId: 1,
+      options: [
+        "Superimpose information on carrier wave",
+        "Amplify signals",
+        "Filter noise",
+        "Convert digital to analog",
+      ],
+    },
+    {
+      category: "EC",
+      question: "Which type of diode emits light?",
+      correctOptionId: 3,
+      options: ["Zener diode", "Schottky diode", "LED", "Varactor diode"],
+    },
+    {
+      category: "EC",
+      question: "What does MOSFET stand for?",
+      correctOptionId: 1,
+      options: [
+        "Metal Oxide Semiconductor Field Effect Transistor",
+        "Metal Oxide Silicon Field Effect Transistor",
+        "Multiple Output Silicon Field Effect Transistor",
+        "Magnetic Oxide Semiconductor Field Effect Transistor",
+      ],
+    },
+    {
+      category: "EC",
+      question: "Which filter allows low frequencies to pass?",
+      correctOptionId: 1,
+      options: ["Low-pass filter", "High-pass filter", "Band-pass filter", "Band-stop filter"],
+    },
+    {
+      category: "EC",
+      question: "What is the bandwidth of AM radio?",
+      correctOptionId: 4,
+      options: ["5 kHz", "15 kHz", "20 kHz", "10 kHz"],
+    },
+    {
+      category: "EC",
+      question: "Which component stores charge?",
+      correctOptionId: 2,
+      options: ["Resistor", "Capacitor", "Inductor", "Transistor"],
+    },
+    {
+      category: "EC",
+      question: "What is the unit of capacitance?",
+      correctOptionId: 3,
+      options: ["Henry", "Ohm", "Farad", "Weber"],
+    },
+    {
+      category: "EC",
+      question: "Which multiplexing technique divides bandwidth?",
+      correctOptionId: 1,
+      options: ["FDM", "TDM", "WDM", "CDM"],
+    },
+    {
+      category: "EC",
+      question: "What does BJT stand for?",
+      correctOptionId: 4,
+      options: [
+        "Basic Junction Transistor",
+        "Bi-directional Junction Transistor",
+        "Binary Junction Transistor",
+        "Bipolar Junction Transistor",
+      ],
+    },
+    {
+      category: "EC",
+      question: "Which antenna radiates equally in all directions?",
+      correctOptionId: 2,
+      options: ["Directional", "Isotropic", "Yagi", "Parabolic"],
+    },
+    {
+      category: "EC",
+      question: "What is the doping process used for?",
+      correctOptionId: 3,
+      options: [
+        "Cooling semiconductors",
+        "Cleaning circuits",
+        "Adding impurities to semiconductors",
+        "Removing defects",
+      ],
+    },
+    {
+      category: "EC",
+      question: "Which oscillator uses LC circuit?",
+      correctOptionId: 1,
+      options: ["Hartley oscillator", "Crystal oscillator", "RC oscillator", "Relaxation oscillator"],
+    },
+    {
+      category: "EC",
+      question: "What is the primary function of an amplifier?",
+      correctOptionId: 2,
+      options: [
+        "Filter signals",
+        "Increase signal strength",
+        "Convert AC to DC",
+        "Modulate signals",
+      ],
+    },
+    {
+      category: "EC",
+      question: "Which protocol is used in mobile communication?",
+      correctOptionId: 4,
+      options: ["HTTP", "FTP", "SMTP", "GSM"],
+    },
+    {
+      category: "EC",
+      question: "What does SNR stand for?",
+      correctOptionId: 1,
+      options: [
+        "Signal-to-Noise Ratio",
+        "System Network Ratio",
+        "Synchronized Network Rate",
+        "Signal Network Receiver",
+      ],
+    },
+    {
+      category: "EC",
+      question: "Which generation of mobile networks introduced 4G?",
+      correctOptionId: 3,
+      options: ["Second", "Third", "Fourth", "Fifth"],
+    },
+    {
+      category: "EC",
+      question: "What is the function of a demodulator?",
+      correctOptionId: 2,
+      options: [
+        "Amplify carrier wave",
+        "Extract information from carrier wave",
+        "Filter high frequencies",
+        "Convert digital to analog",
+      ],
+    },
+    {
+      category: "EC",
+      question: "Which theorem is fundamental to sampling?",
+      correctOptionId: 4,
+      options: [
+        "Kirchhoff's theorem",
+        "Thevenin's theorem",
+        "Norton's theorem",
+        "Nyquist-Shannon theorem",
+      ],
+    },
+    {
+      category: "EC",
+      question: "What type of feedback reduces gain?",
+      correctOptionId: 1,
+      options: ["Negative feedback", "Positive feedback", "No feedback", "Forward feedback"],
+    },
+    {
+      category: "EC",
+      question: "Which device converts light to electrical signal?",
+      correctOptionId: 3,
+      options: ["LED", "Transistor", "Photodiode", "Capacitor"],
+    },
     {
       category: "EE",
       question: "What is the SI unit of power?",
@@ -888,512 +1364,157 @@ async function main() {
       correctOptionId: 1,
       options: ["Circuit Breaker", "Voltmeter", "Ammeter", "Oscilloscope"],
     },
-
-    // Biotechnology Questions
     {
-      category: "BT",
-      question: "What does DNA stand for?",
+      category: "EE",
+      question: "What is the power factor range?",
       correctOptionId: 2,
-      options: [
-        "Deoxyribose Nucleic Acid",
-        "Deoxyribonucleic Acid",
-        "Diribonucleic Acid",
-        "Deoxyribonitrogen Acid",
-      ],
+      options: ["-1 to 1", "0 to 1", "0 to 100", "1 to infinity"],
     },
     {
-      category: "BT",
-      question: "Which technique is used to amplify DNA?",
+      category: "EE",
+      question: "Which motor has the highest starting torque?",
       correctOptionId: 1,
-      options: ["PCR", "ELISA", "Western Blot", "Chromatography"],
+      options: ["DC Series motor", "DC Shunt motor", "Synchronous motor", "Induction motor"],
     },
     {
-      category: "BT",
-      question: "What is the powerhouse of the cell?",
+      category: "EE",
+      question: "What is the function of a commutator in DC motor?",
       correctOptionId: 3,
-      options: ["Nucleus", "Ribosome", "Mitochondria", "Chloroplast"],
-    },
-    {
-      category: "BT",
-      question: "Which enzyme is known as molecular scissors?",
-      correctOptionId: 2,
-      options: [
-        "DNA Ligase",
-        "Restriction Enzyme",
-        "DNA Polymerase",
-        "Helicase",
-      ],
-    },
-    {
-      category: "BT",
-      question: "What does CRISPR stand for?",
-      correctOptionId: 4,
-      options: [
-        "Common Repeated Interspaced Palindromic Repeats",
-        "Chemical Reaction In Specified Palindromic Region",
-        "Cellular Repeated Interspaced Short Palindromic Repeats",
-        "Clustered Regularly Interspaced Short Palindromic Repeats",
-      ],
-    },
-    {
-      category: "BT",
-      question: "Which organism is used as a model in genetic studies?",
-      correctOptionId: 1,
-      options: ["E. coli", "Elephant", "Tiger", "Whale"],
-    },
-    {
-      category: "BT",
-      question: "What is the process of creating identical organisms called?",
-      correctOptionId: 3,
-      options: ["Mutation", "Hybridization", "Cloning", "Fermentation"],
-    },
-    {
-      category: "BT",
-      question: "Which protein carries oxygen in blood?",
-      correctOptionId: 2,
-      options: ["Insulin", "Hemoglobin", "Albumin", "Collagen"],
-    },
-    {
-      category: "BT",
-      question: "What is the study of microorganisms called?",
-      correctOptionId: 1,
-      options: ["Microbiology", "Zoology", "Botany", "Ecology"],
-    },
-    {
-      category: "BT",
-      question: "Which technique separates DNA fragments by size?",
-      correctOptionId: 4,
-      options: ["PCR", "ELISA", "Centrifugation", "Gel Electrophoresis"],
-    },
-
-    // Chemical Engineering Questions
-    {
-      category: "CH",
-      question: "What is the SI unit of pressure?",
-      correctOptionId: 2,
-      options: ["Newton", "Pascal", "Joule", "Watt"],
-    },
-    {
-      category: "CH",
-      question: "Which process separates liquids based on boiling points?",
-      correctOptionId: 1,
-      options: ["Distillation", "Filtration", "Crystallization", "Evaporation"],
-    },
-    {
-      category: "CH",
-      question: "What does pH measure?",
-      correctOptionId: 3,
-      options: ["Temperature", "Pressure", "Acidity or Alkalinity", "Density"],
-    },
-    {
-      category: "CH",
-      question:
-        "Which law states that total pressure equals sum of partial pressures?",
-      correctOptionId: 2,
-      options: [
-        "Boyle's Law",
-        "Dalton's Law",
-        "Charles' Law",
-        "Avogadro's Law",
-      ],
-    },
-    {
-      category: "CH",
-      question: "What is the process of converting solid to gas called?",
-      correctOptionId: 4,
-      options: ["Melting", "Evaporation", "Condensation", "Sublimation"],
-    },
-    {
-      category: "CH",
-      question: "Which catalyst is used in Haber process?",
-      correctOptionId: 1,
-      options: ["Iron", "Platinum", "Nickel", "Copper"],
-    },
-    {
-      category: "CH",
-      question: "What does the term 'stoichiometry' refer to?",
-      correctOptionId: 3,
-      options: [
-        "Heat transfer",
-        "Fluid mechanics",
-        "Quantitative relationships in reactions",
-        "Phase equilibrium",
-      ],
-    },
-    {
-      category: "CH",
-      question: "Which unit operation involves mass transfer between phases?",
-      correctOptionId: 2,
-      options: ["Crushing", "Absorption", "Mixing", "Heating"],
-    },
-    {
-      category: "CH",
-      question: "What is the ideal gas constant value approximately?",
-      correctOptionId: 1,
-      options: ["8.314 J/mol·K", "10 J/mol·K", "6.022 J/mol·K", "1.38 J/mol·K"],
-    },
-    {
-      category: "CH",
-      question: "Which reactor type has the highest conversion efficiency?",
-      correctOptionId: 3,
-      options: [
-        "Batch reactor",
-        "CSTR",
-        "Plug flow reactor",
-        "Semi-batch reactor",
-      ],
-    },
-
-    // Mechanical Engineering Questions
-    {
-      category: "ME",
-      question: "What is the SI unit of force?",
-      correctOptionId: 2,
-      options: ["Joule", "Newton", "Watt", "Pascal"],
-    },
-    {
-      category: "ME",
-      question: "Which law states action and reaction are equal and opposite?",
-      correctOptionId: 3,
-      options: [
-        "First Law of Motion",
-        "Second Law of Motion",
-        "Third Law of Motion",
-        "Law of Gravitation",
-      ],
-    },
-    {
-      category: "ME",
-      question: "What is the efficiency of a Carnot engine dependent on?",
-      correctOptionId: 1,
-      options: [
-        "Temperature difference",
-        "Fuel type",
-        "Engine size",
-        "Pressure",
-      ],
-    },
-    {
-      category: "ME",
-      question: "Which material property resists deformation?",
-      correctOptionId: 4,
-      options: ["Ductility", "Malleability", "Brittleness", "Hardness"],
-    },
-    {
-      category: "ME",
-      question: "What does CAD stand for?",
-      correctOptionId: 2,
-      options: [
-        "Computer Aided Development",
-        "Computer Aided Design",
-        "Central Aided Design",
-        "Computer Automatic Design",
-      ],
-    },
-    {
-      category: "ME",
-      question: "Which type of stress acts parallel to the surface?",
-      correctOptionId: 3,
-      options: [
-        "Tensile stress",
-        "Compressive stress",
-        "Shear stress",
-        "Bending stress",
-      ],
-    },
-    {
-      category: "ME",
-      question: "What is the unit of torque?",
-      correctOptionId: 1,
-      options: ["Newton-meter", "Watt", "Joule", "Pascal"],
-    },
-    {
-      category: "ME",
-      question: "Which cycle is used in petrol engines?",
-      correctOptionId: 2,
-      options: ["Diesel cycle", "Otto cycle", "Rankine cycle", "Brayton cycle"],
-    },
-    {
-      category: "ME",
-      question: "What is the modulus of elasticity also called?",
-      correctOptionId: 4,
-      options: [
-        "Poisson's ratio",
-        "Bulk modulus",
-        "Shear modulus",
-        "Young's modulus",
-      ],
-    },
-    {
-      category: "ME",
-      question: "Which manufacturing process removes material?",
-      correctOptionId: 1,
-      options: ["Machining", "Casting", "Welding", "Forging"],
-    },
-
-    // Automobile Engineering Questions
-    {
-      category: "AE",
-      question: "What does ABS stand for in vehicles?",
-      correctOptionId: 3,
-      options: [
-        "Automatic Brake System",
-        "Advanced Braking System",
-        "Anti-lock Braking System",
-        "Assisted Brake System",
-      ],
-    },
-    {
-      category: "AE",
-      question:
-        "Which component converts reciprocating motion to rotary motion?",
-      correctOptionId: 2,
-      options: ["Camshaft", "Crankshaft", "Piston", "Connecting rod"],
-    },
-    {
-      category: "AE",
-      question: "What is the typical compression ratio of a diesel engine?",
-      correctOptionId: 4,
-      options: ["8:1", "10:1", "12:1", "16:1 to 20:1"],
-    },
-    {
-      category: "AE",
-      question: "Which fuel system component atomizes fuel?",
-      correctOptionId: 1,
-      options: ["Injector", "Carburetor", "Fuel pump", "Fuel filter"],
-    },
-    {
-      category: "AE",
-      question: "What does EFI stand for?",
-      correctOptionId: 2,
-      options: [
-        "Engine Fuel Integration",
-        "Electronic Fuel Injection",
-        "Electric Fuel Ignition",
-        "Enhanced Fuel Intake",
-      ],
-    },
-    {
-      category: "AE",
-      question: "Which type of suspension uses springs and shock absorbers?",
-      correctOptionId: 3,
-      options: [
-        "Air suspension",
-        "Hydraulic suspension",
-        "Coil spring suspension",
-        "Magnetic suspension",
-      ],
-    },
-    {
-      category: "AE",
-      question: "What is the function of a differential?",
-      correctOptionId: 4,
       options: [
         "Increase speed",
-        "Reduce emissions",
-        "Cool engine",
-        "Allow wheels to rotate at different speeds",
+        "Reduce losses",
+        "Convert AC to DC in armature",
+        "Cool the motor",
       ],
     },
     {
-      category: "AE",
-      question: "Which emission control device reduces NOx?",
-      correctOptionId: 1,
-      options: [
-        "Catalytic converter",
-        "Muffler",
-        "Air filter",
-        "Fuel injector",
-      ],
+      category: "EE",
+      question: "Which material has the highest resistivity?",
+      correctOptionId: 4,
+      options: ["Copper", "Aluminum", "Silver", "Nichrome"],
     },
     {
-      category: "AE",
-      question: "What type of transmission has no clutch pedal?",
+      category: "EE",
+      question: "What is the unit of inductance?",
       correctOptionId: 2,
-      options: ["Manual", "Automatic", "Sequential", "Dual-clutch"],
+      options: ["Farad", "Henry", "Ohm", "Siemens"],
     },
     {
-      category: "AE",
-      question: "Which cooling system component regulates coolant flow?",
+      category: "EE",
+      question: "Which relay is used for overload protection?",
+      correctOptionId: 1,
+      options: ["Thermal relay", "Reed relay", "Latching relay", "Solid-state relay"],
+    },
+    {
+      category: "EE",
+      question: "What is the slip of a synchronous motor?",
       correctOptionId: 3,
-      options: ["Radiator", "Water pump", "Thermostat", "Fan"],
+      options: ["5%", "10%", "0%", "Variable"],
+    },
+    {
+      category: "EE",
+      question: "Which instrument measures electric current?",
+      correctOptionId: 2,
+      options: ["Voltmeter", "Ammeter", "Wattmeter", "Ohmmeter"],
+    },
+    {
+      category: "EE",
+      question: "What is the typical voltage level for transmission lines in India?",
+      correctOptionId: 4,
+      options: ["11 kV", "33 kV", "132 kV", "400 kV"],
+    },
+    {
+      category: "EE",
+      question: "Which type of starter is used for large induction motors?",
+      correctOptionId: 1,
+      options: ["Star-delta starter", "DOL starter", "Soft starter", "Manual starter"],
+    },
+    {
+      category: "EE",
+      question: "What does PFC stand for in electrical systems?",
+      correctOptionId: 3,
+      options: [
+        "Primary Frequency Control",
+        "Parallel Function Circuit",
+        "Power Factor Correction",
+        "Protected Fuse Circuit",
+      ],
+    },
+    {
+      category: "EE",
+      question: "Which loss occurs in the core of a transformer?",
+      correctOptionId: 2,
+      options: ["Copper loss", "Iron loss", "Friction loss", "Windage loss"],
+    },
+    {
+      category: "EE",
+      question: "What is the primary advantage of three-phase over single-phase?",
+      correctOptionId: 4,
+      options: [
+        "Lower cost",
+        "Simpler design",
+        "Less maintenance",
+        "More power for same conductor size",
+      ],
+    },
+    {
+      category: "EE",
+      question: "Which device protects against short circuits?",
+      correctOptionId: 1,
+      options: ["Circuit breaker", "Ammeter", "Voltmeter", "Rheostat"],
+    },
+    {
+      category: "EE",
+      question: "What is the principle of operation of a DC generator?",
+      correctOptionId: 2,
+      options: [
+        "Ohm's law",
+        "Faraday's law of electromagnetic induction",
+        "Lenz's law",
+        "Kirchhoff's law",
+      ],
+    },
+    {
+      category: "EE",
+      question: "Which motor is NOT self-starting?",
+      correctOptionId: 3,
+      options: ["DC shunt motor", "Induction motor", "Synchronous motor", "Universal motor"],
+    },
+    {
+      category: "EE",
+      question: "What is earthing used for?",
+      correctOptionId: 4,
+      options: [
+        "Increase efficiency",
+        "Reduce costs",
+        "Improve power factor",
+        "Prevent electric shock",
+      ],
+    },
+    {
+      category: "EE",
+      question: "Which component opposes change in current?",
+      correctOptionId: 2,
+      options: ["Capacitor", "Inductor", "Resistor", "Diode"],
+    },
+    {
+      category: "EE",
+      question: "What is the efficiency of an ideal transformer?",
+      correctOptionId: 1,
+      options: ["100%", "95%", "90%", "85%"],
+    },
+    {
+      category: "EE",
+      question: "Which law is used for nodal analysis?",
+      correctOptionId: 3,
+      options: [
+        "Ohm's law",
+        "Faraday's law",
+        "Kirchhoff's Current Law",
+        "Lenz's law",
+      ],
     },
 
-    // Civil Engineering Questions
-    {
-      category: "CE",
-      question: "What is the compressive strength of concrete measured in?",
-      correctOptionId: 2,
-      options: ["kN", "MPa", "kg", "N"],
-    },
-    {
-      category: "CE",
-      question: "Which cement is used for underwater construction?",
-      correctOptionId: 1,
-      options: [
-        "Portland Pozzolana Cement",
-        "Ordinary Portland Cement",
-        "White Cement",
-        "Quick Setting Cement",
-      ],
-    },
-    {
-      category: "CE",
-      question: "What is the standard size of a modular brick in India?",
-      correctOptionId: 3,
-      options: [
-        "230×115×75 mm",
-        "200×100×50 mm",
-        "190×90×90 mm",
-        "250×125×100 mm",
-      ],
-    },
-    {
-      category: "CE",
-      question: "Which test is used to determine the fineness of cement?",
-      correctOptionId: 4,
-      options: [
-        "Slump test",
-        "Compaction test",
-        "Consistency test",
-        "Sieve analysis",
-      ],
-    },
-    {
-      category: "CE",
-      question: "What does DPC stand for in construction?",
-      correctOptionId: 2,
-      options: [
-        "Direct Pressure Course",
-        "Damp Proof Course",
-        "Deep Pile Course",
-        "Design Planning Course",
-      ],
-    },
-    {
-      category: "CE",
-      question: "Which structural element primarily resists bending?",
-      correctOptionId: 1,
-      options: ["Beam", "Column", "Slab", "Foundation"],
-    },
-    {
-      category: "CE",
-      question: "What is the water-cement ratio for normal concrete?",
-      correctOptionId: 3,
-      options: ["0.3", "0.35", "0.4 to 0.5", "0.6"],
-    },
-    {
-      category: "CE",
-      question:
-        "Which survey instrument measures horizontal and vertical angles?",
-      correctOptionId: 2,
-      options: ["Compass", "Theodolite", "Level", "Chain"],
-    },
-    {
-      category: "CE",
-      question: "What is the minimum grade of concrete for RCC work?",
-      correctOptionId: 4,
-      options: ["M10", "M15", "M25", "M20"],
-    },
-    {
-      category: "CE",
-      question: "Which soil has the highest bearing capacity?",
-      correctOptionId: 1,
-      options: ["Rock", "Clay", "Silt", "Sand"],
-    },
-
-    // Mechanical and Automation Engineering Questions
-    {
-      category: "MN",
-      question: "What does PLC stand for in automation?",
-      correctOptionId: 3,
-      options: [
-        "Program Logic Computer",
-        "Power Line Controller",
-        "Programmable Logic Controller",
-        "Parallel Logic Circuit",
-      ],
-    },
-    {
-      category: "MN",
-      question: "Which sensor detects the presence of objects?",
-      correctOptionId: 2,
-      options: [
-        "Temperature sensor",
-        "Proximity sensor",
-        "Pressure sensor",
-        "Flow sensor",
-      ],
-    },
-    {
-      category: "MN",
-      question: "What does CNC stand for?",
-      correctOptionId: 1,
-      options: [
-        "Computer Numerical Control",
-        "Central Numeric Controller",
-        "Computerized Navigation Control",
-        "Continuous Numeric Computation",
-      ],
-    },
-    {
-      category: "MN",
-      question: "Which control system uses feedback?",
-      correctOptionId: 4,
-      options: [
-        "Open loop",
-        "Manual control",
-        "Sequential control",
-        "Closed loop",
-      ],
-    },
-    {
-      category: "MN",
-      question: "What type of motor is commonly used in robotics?",
-      correctOptionId: 3,
-      options: ["AC motor", "DC motor", "Servo motor", "Induction motor"],
-    },
-    {
-      category: "MN",
-      question: "Which protocol is widely used in industrial automation?",
-      correctOptionId: 2,
-      options: ["HTTP", "Modbus", "FTP", "SMTP"],
-    },
-    {
-      category: "MN",
-      question: "What does SCARA stand for in robotics?",
-      correctOptionId: 1,
-      options: [
-        "Selective Compliance Assembly Robot Arm",
-        "System Control And Robot Automation",
-        "Sequential Control Automated Robot Assembly",
-        "Smart Controlled Articulated Robot Arm",
-      ],
-    },
-    {
-      category: "MN",
-      question:
-        "Which component converts electrical signals to mechanical motion?",
-      correctOptionId: 4,
-      options: ["Sensor", "Controller", "Encoder", "Actuator"],
-    },
-    {
-      category: "MN",
-      question: "What is the main advantage of automation?",
-      correctOptionId: 2,
-      options: [
-        "Higher initial cost",
-        "Increased productivity",
-        "More manual work",
-        "Complex maintenance",
-      ],
-    },
-    {
-      category: "MN",
-      question: "Which technology enables machine-to-machine communication?",
-      correctOptionId: 3,
-      options: ["PLC", "SCADA", "IoT", "HMI"],
-    },
   ];
 
   for (const q of regularQuestions) {
