@@ -28,7 +28,9 @@ async function main() {
       role: "BUILDER",
     },
   });
-
+  // ==============================
+  // COMPREHENSION PASSAGES
+  // ==============================
   await prisma.comprehension.create({
     data: {
       passage:
@@ -175,7 +177,12 @@ async function main() {
       },
     },
   });
+
+  // ==============================
+  // REGULAR QUESTIONS
+  // ==============================
   const regularQuestions = [
+    // Aptitude Questions
     {
       category: "Aptitude",
       question: "What is 25% of 200?",
@@ -238,6 +245,8 @@ async function main() {
       correctOptionId: 2,
       options: ["24", "13", "16", "8"],
     },
+
+    // Verbal Questions
     {
       category: "Verbal",
       question: "Choose the synonym of 'eloquent'.",
@@ -308,6 +317,8 @@ async function main() {
         "A letter has written by him.",
       ],
     },
+
+    // Computer Science Questions
     {
       category: "CS",
       question: "What is the time complexity of binary search?",
@@ -458,6 +469,7 @@ async function main() {
       options: ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
     },
 
+    // Programming Questions
     {
       category: "Programming",
       question: "Which keyword declares a constant in JavaScript?",
@@ -538,6 +550,8 @@ async function main() {
       correctOptionId: 3,
       options: ["=", "==", "===", "!="],
     },
+
+    // AI and Data Science Questions (Original 10 + 20 new = 30 total)
     {
       category: "AD",
       question: "What does ML stand for in AI?",
@@ -798,6 +812,8 @@ async function main() {
         "Adding more layers",
       ],
     },
+
+    // Information Technology Questions (Original 10 + 20 new = 30 total)
     {
       category: "IT",
       question: "What does VPN stand for?",
@@ -878,6 +894,7 @@ async function main() {
       correctOptionId: 2,
       options: ["POST", "GET", "PUT", "DELETE"],
     },
+    // 20 NEW IT QUESTIONS
     {
       category: "IT",
       question: "What is the maximum length of an IPv4 address?",
@@ -1039,6 +1056,7 @@ async function main() {
       options: ["Google Cloud", "AWS", "Azure", "IBM Cloud"],
     },
 
+    // Electronics and Communication Engineering Questions (Original 10 + 20 new = 30 total)
     {
       category: "EC",
       question: "What does AM stand for in communication?",
@@ -1124,6 +1142,7 @@ async function main() {
       correctOptionId: 1,
       options: ["Rectifier", "Inverter", "Transformer", "Amplifier"],
     },
+    // 20 NEW EC QUESTIONS
     {
       category: "EC",
       question: "What is the function of a modulator?",
@@ -1284,6 +1303,8 @@ async function main() {
       correctOptionId: 3,
       options: ["LED", "Transistor", "Photodiode", "Capacitor"],
     },
+
+    // Electrical and Electronics Engineering Questions (Original 10 + 20 new = 30 total)
     {
       category: "EE",
       question: "What is the SI unit of power?",
@@ -1364,6 +1385,7 @@ async function main() {
       correctOptionId: 1,
       options: ["Circuit Breaker", "Voltmeter", "Ammeter", "Oscilloscope"],
     },
+    // 20 NEW EE QUESTIONS
     {
       category: "EE",
       question: "What is the power factor range?",
@@ -1515,8 +1537,740 @@ async function main() {
       ],
     },
 
-  ];
+  // Biotechnology (BT) - 20 more questions
+  {
+    category: "BT",
+    question: "What is the function of ribosomes?",
+    correctOptionId: 1,
+    options: ["Protein synthesis", "Energy production", "DNA replication", "Lipid synthesis"],
+  },
+  {
+    category: "BT",
+    question: "Which organelle is known as the suicide bag of the cell?",
+    correctOptionId: 2,
+    options: ["Mitochondria", "Lysosome", "Ribosome", "Golgi apparatus"],
+  },
+  {
+    category: "BT",
+    question: "What is the basic unit of heredity?",
+    correctOptionId: 3,
+    options: ["Chromosome", "DNA", "Gene", "Protein"],
+  },
+  {
+    category: "BT",
+    question: "Which process produces energy in cells?",
+    correctOptionId: 4,
+    options: ["Photosynthesis", "Transcription", "Translation", "Cellular respiration"],
+  },
+  {
+    category: "BT",
+    question: "What is the pH of blood?",
+    correctOptionId: 1,
+    options: ["7.4", "6.8", "8.0", "7.0"],
+  },
+  {
+    category: "BT",
+    question: "Which vitamin is synthesized by skin?",
+    correctOptionId: 2,
+    options: ["Vitamin A", "Vitamin D", "Vitamin C", "Vitamin K"],
+  },
+  {
+    category: "BT",
+    question: "What does GMO stand for?",
+    correctOptionId: 3,
+    options: ["General Modified Organism", "Genetic Molecular Organism", "Genetically Modified Organism", "Gene Mutation Organism"],
+  },
+  {
+    category: "BT",
+    question: "Which is the largest human organ?",
+    correctOptionId: 4,
+    options: ["Liver", "Brain", "Heart", "Skin"],
+  },
+  {
+    category: "BT",
+    question: "What is the process of cell division called?",
+    correctOptionId: 1,
+    options: ["Mitosis", "Meiosis", "Both", "Binary fission"],
+  },
+  {
+    category: "BT",
+    question: "Which molecule carries genetic information?",
+    correctOptionId: 2,
+    options: ["RNA only", "DNA", "Protein", "Lipid"],
+  },
+  {
+    category: "BT",
+    question: "What is the function of chloroplast?",
+    correctOptionId: 3,
+    options: ["Respiration", "Protein synthesis", "Photosynthesis", "Cell division"],
+  },
+  {
+    category: "BT",
+    question: "Which blood group is the universal donor?",
+    correctOptionId: 4,
+    options: ["A", "B", "AB", "O"],
+  },
+  {
+    category: "BT",
+    question: "What is the building block of proteins?",
+    correctOptionId: 1,
+    options: ["Amino acids", "Nucleotides", "Fatty acids", "Glucose"],
+  },
+  {
+    category: "BT",
+    question: "Which technique is used for DNA fingerprinting?",
+    correctOptionId: 2,
+    options: ["PCR only", "RFLP", "ELISA", "Chromatography"],
+  },
+  {
+    category: "BT",
+    question: "What is the function of antibodies?",
+    correctOptionId: 3,
+    options: ["Carry oxygen", "Digest food", "Fight infections", "Store energy"],
+  },
+  {
+    category: "BT",
+    question: "Which hormone regulates blood sugar?",
+    correctOptionId: 4,
+    options: ["Thyroxine", "Adrenaline", "Testosterone", "Insulin"],
+  },
+  {
+    category: "BT",
+    question: "What is apoptosis?",
+    correctOptionId: 1,
+    options: ["Programmed cell death", "Cell growth", "Cell division", "Cell mutation"],
+  },
+  {
+    category: "BT",
+    question: "Which organism is used in genetic engineering?",
+    correctOptionId: 2,
+    options: ["Virus only", "Bacteria", "Fungus only", "Plant only"],
+  },
+  {
+    category: "BT",
+    question: "What is the function of enzymes?",
+    correctOptionId: 3,
+    options: ["Store energy", "Carry oxygen", "Catalyze reactions", "Fight diseases"],
+  },
+  {
+    category: "BT",
+    question: "Which technique amplifies specific DNA sequences?",
+    correctOptionId: 4,
+    options: ["Gel electrophoresis", "Western blot", "ELISA", "PCR"],
+  },
 
+  // Chemical Engineering (CH) - 20 more questions
+  {
+    category: "CH",
+    question: "What is the molarity of 1M solution?",
+    correctOptionId: 1,
+    options: ["1 mol/L", "1 g/L", "1 mol/kg", "1 g/mL"],
+  },
+  {
+    category: "CH",
+    question: "Which process converts salt water to fresh water?",
+    correctOptionId: 2,
+    options: ["Filtration", "Desalination", "Chlorination", "Aeration"],
+  },
+  {
+    category: "CH",
+    question: "What is Avogadro's number?",
+    correctOptionId: 3,
+    options: ["6.022×10²²", "6.022×10²⁴", "6.022×10²³", "6.022×10²¹"],
+  },
+  {
+    category: "CH",
+    question: "Which catalyst is used in catalytic cracking?",
+    correctOptionId: 4,
+    options: ["Iron", "Nickel", "Platinum", "Zeolite"],
+  },
+  {
+    category: "CH",
+    question: "What is the critical point of a substance?",
+    correctOptionId: 1,
+    options: ["Where liquid and gas phases are indistinguishable", "Boiling point", "Freezing point", "Triple point"],
+  },
+  {
+    category: "CH",
+    question: "Which law relates pressure and volume at constant temperature?",
+    correctOptionId: 2,
+    options: ["Charles' Law", "Boyle's Law", "Dalton's Law", "Henry's Law"],
+  },
+  {
+    category: "CH",
+    question: "What is the unit of viscosity?",
+    correctOptionId: 3,
+    options: ["Pascal", "Newton", "Poise", "Watt"],
+  },
+  {
+    category: "CH",
+    question: "Which process separates components based on boiling points?",
+    correctOptionId: 4,
+    options: ["Filtration", "Crystallization", "Extraction", "Fractional distillation"],
+  },
+  {
+    category: "CH",
+    question: "What is the pH of a neutral solution?",
+    correctOptionId: 1,
+    options: ["7", "0", "14", "1"],
+  },
+  {
+    category: "CH",
+    question: "Which reactor operates in steady state?",
+    correctOptionId: 2,
+    options: ["Batch reactor", "CSTR", "Semi-batch", "None"],
+  },
+  {
+    category: "CH",
+    question: "What is the heat of vaporization?",
+    correctOptionId: 3,
+    options: ["Heat to melt solid", "Heat to raise temperature", "Heat to vaporize liquid", "Heat to sublime"],
+  },
+  {
+    category: "CH",
+    question: "Which law governs mass conservation?",
+    correctOptionId: 4,
+    options: ["Newton's Law", "Boyle's Law", "Charles' Law", "Law of Mass Conservation"],
+  },
+  {
+    category: "CH",
+    question: "What is an exothermic reaction?",
+    correctOptionId: 1,
+    options: ["Releases heat", "Absorbs heat", "No heat change", "Reversible"],
+  },
+  {
+    category: "CH",
+    question: "Which unit operation involves heat transfer?",
+    correctOptionId: 2,
+    options: ["Filtration", "Evaporation", "Mixing", "Crushing"],
+  },
+  {
+    category: "CH",
+    question: "What is the Reynolds number used for?",
+    correctOptionId: 3,
+    options: ["Heat transfer", "Mass transfer", "Flow regime determination", "Pressure drop"],
+  },
+  {
+    category: "CH",
+    question: "Which process removes suspended solids?",
+    correctOptionId: 4,
+    options: ["Distillation", "Absorption", "Extraction", "Filtration"],
+  },
+  {
+    category: "CH",
+    question: "What is the oxidation state of oxygen in water?",
+    correctOptionId: 1,
+    options: ["-2", "0", "+2", "+1"],
+  },
+  {
+    category: "CH",
+    question: "Which equipment is used for liquid-liquid separation?",
+    correctOptionId: 2,
+    options: ["Filter", "Separator", "Mixer", "Reactor"],
+  },
+  {
+    category: "CH",
+    question: "What is the Haber process used to produce?",
+    correctOptionId: 3,
+    options: ["Sulfuric acid", "Nitric acid", "Ammonia", "Methanol"],
+  },
+  {
+    category: "CH",
+    question: "Which parameter indicates reaction completion?",
+    correctOptionId: 4,
+    options: ["Temperature", "Pressure", "Color", "Conversion"],
+  },
+
+  // Mechanical Engineering (ME) - 20 more questions
+  {
+    category: "ME",
+    question: "What is the coefficient of friction?",
+    correctOptionId: 1,
+    options: ["Ratio of friction force to normal force", "Force per unit area", "Ratio of stress to strain", "Rate of deformation"],
+  },
+  {
+    category: "ME",
+    question: "Which law states energy cannot be created or destroyed?",
+    correctOptionId: 2,
+    options: ["Newton's Law", "First Law of Thermodynamics", "Hooke's Law", "Pascal's Law"],
+  },
+  {
+    category: "ME",
+    question: "What is the COP of a refrigerator?",
+    correctOptionId: 3,
+    options: ["Efficiency", "Power ratio", "Coefficient of Performance", "Cooling capacity"],
+  },
+  {
+    category: "ME",
+    question: "Which process has constant volume?",
+    correctOptionId: 4,
+    options: ["Isobaric", "Isothermal", "Adiabatic", "Isochoric"],
+  },
+  {
+    category: "ME",
+    question: "What is the unit of strain?",
+    correctOptionId: 1,
+    options: ["Dimensionless", "Pascal", "Newton", "Meter"],
+  },
+  {
+    category: "ME",
+    question: "Which gear type transmits power between parallel shafts?",
+    correctOptionId: 2,
+    options: ["Bevel gear", "Spur gear", "Worm gear", "Helical gear"],
+  },
+  {
+    category: "ME",
+    question: "What is the Poisson's ratio for incompressible materials?",
+    correctOptionId: 3,
+    options: ["0", "0.25", "0.5", "1"],
+  },
+  {
+    category: "ME",
+    question: "Which casting process uses permanent molds?",
+    correctOptionId: 4,
+    options: ["Sand casting", "Investment casting", "Shell molding", "Die casting"],
+  },
+  {
+    category: "ME",
+    question: "What is the specific heat ratio for ideal diatomic gas?",
+    correctOptionId: 1,
+    options: ["1.4", "1.0", "1.67", "2.0"],
+  },
+  {
+    category: "ME",
+    question: "Which welding uses non-consumable electrode?",
+    correctOptionId: 2,
+    options: ["MIG", "TIG", "Arc", "Spot"],
+  },
+  {
+    category: "ME",
+    question: "What is the degree of freedom for a rigid body in 3D?",
+    correctOptionId: 3,
+    options: ["3", "4", "6", "9"],
+  },
+  {
+    category: "ME",
+    question: "Which theorem relates strain energy and external work?",
+    correctOptionId: 4,
+    options: ["Bernoulli", "Euler", "Hooke", "Castigliano"],
+  },
+  {
+    category: "ME",
+    question: "What is the Mach number?",
+    correctOptionId: 1,
+    options: ["Velocity ratio to sound speed", "Pressure ratio", "Temperature ratio", "Density ratio"],
+  },
+  {
+    category: "ME",
+    question: "Which cycle has two isothermal and two adiabatic processes?",
+    correctOptionId: 2,
+    options: ["Otto", "Carnot", "Diesel", "Brayton"],
+  },
+  {
+    category: "ME",
+    question: "What is critical speed in rotating shafts?",
+    correctOptionId: 3,
+    options: ["Maximum speed", "Minimum speed", "Speed at resonance", "Operating speed"],
+  },
+  {
+    category: "ME",
+    question: "Which bearing type uses rolling elements?",
+    correctOptionId: 4,
+    options: ["Journal", "Sleeve", "Hydrodynamic", "Ball bearing"],
+  },
+  {
+    category: "ME",
+    question: "What is the efficiency of Carnot cycle dependent on?",
+    correctOptionId: 1,
+    options: ["Temperature limits", "Pressure", "Volume", "Mass"],
+  },
+  {
+    category: "ME",
+    question: "Which metal has highest thermal conductivity?",
+    correctOptionId: 2,
+    options: ["Copper", "Silver", "Aluminum", "Gold"],
+  },
+  {
+    category: "ME",
+    question: "What is the purpose of flywheel?",
+    correctOptionId: 3,
+    options: ["Increase speed", "Decrease speed", "Store energy", "Transfer power"],
+  },
+  {
+    category: "ME",
+    question: "Which process produces threads on external surface?",
+    correctOptionId: 4,
+    options: ["Reaming", "Boring", "Drilling", "Threading"],
+  },
+
+  // Automobile Engineering (AE) - 20 more questions
+  {
+    category: "AE",
+    question: "What is the purpose of a turbocharger?",
+    correctOptionId: 1,
+    options: ["Increase air intake pressure", "Cool engine", "Reduce emissions", "Filter air"],
+  },
+  {
+    category: "AE",
+    question: "Which sensor measures airflow in engines?",
+    correctOptionId: 2,
+    options: ["O2 sensor", "MAF sensor", "Knock sensor", "Throttle position sensor"],
+  },
+  {
+    category: "AE",
+    question: "What is the function of CV joint?",
+    correctOptionId: 3,
+    options: ["Increase torque", "Reduce vibration", "Transfer power at angles", "Cool transmission"],
+  },
+  {
+    category: "AE",
+    question: "Which system prevents wheel lock during braking?",
+    correctOptionId: 4,
+    options: ["TCS", "ESP", "EBD", "ABS"],
+  },
+  {
+    category: "AE",
+    question: "What does OBD stand for?",
+    correctOptionId: 1,
+    options: ["On-Board Diagnostics", "Output Board Display", "Over Board Detection", "Operational Brake Device"],
+  },
+  {
+    category: "AE",
+    question: "Which valve controls exhaust gas recirculation?",
+    correctOptionId: 2,
+    options: ["Throttle valve", "EGR valve", "PCV valve", "Intake valve"],
+  },
+  {
+    category: "AE",
+    question: "What is the typical firing order of 4-cylinder engine?",
+    correctOptionId: 3,
+    options: ["1-2-3-4", "1-4-2-3", "1-3-4-2", "1-2-4-3"],
+  },
+  {
+    category: "AE",
+    question: "Which system assists in maintaining vehicle stability?",
+    correctOptionId: 4,
+    options: ["ABS", "EFI", "TCS", "ESP"],
+  },
+  {
+    category: "AE",
+    question: "What is octane rating?",
+    correctOptionId: 1,
+    options: ["Fuel's resistance to knocking", "Fuel efficiency", "Engine power", "Emission level"],
+  },
+  {
+    category: "AE",
+    question: "Which component dampens torsional vibrations?",
+    correctOptionId: 2,
+    options: ["Flywheel", "Harmonic balancer", "Clutch", "Torque converter"],
+  },
+  {
+    category: "AE",
+    question: "What does DOHC stand for?",
+    correctOptionId: 3,
+    options: ["Direct Overhead Camshaft", "Dual Output Head Cylinder", "Double Overhead Camshaft", "Digital Overhead Control"],
+  },
+  {
+    category: "AE",
+    question: "Which type of brake uses friction pads?",
+    correctOptionId: 4,
+    options: ["Drum brake", "Engine brake", "Exhaust brake", "Disc brake"],
+  },
+  {
+    category: "AE",
+    question: "What is the function of intercooler?",
+    correctOptionId: 1,
+    options: ["Cool compressed air", "Heat coolant", "Filter air", "Increase pressure"],
+  },
+  {
+    category: "AE",
+    question: "Which transmission type uses torque converter?",
+    correctOptionId: 2,
+    options: ["Manual", "Automatic", "CVT", "DCT"],
+  },
+  {
+    category: "AE",
+    question: "What does VVT stand for?",
+    correctOptionId: 3,
+    options: ["Vehicle Valve Technology", "Vortex Valve Timing", "Variable Valve Timing", "Vertical Valve Transfer"],
+  },
+  {
+    category: "AE",
+    question: "Which emission standard is latest in India?",
+    correctOptionId: 4,
+    options: ["BS-III", "BS-IV", "BS-V", "BS-VI"],
+  },
+  {
+    category: "AE",
+    question: "What is the purpose of power steering?",
+    correctOptionId: 1,
+    options: ["Reduce steering effort", "Increase speed", "Improve braking", "Enhance suspension"],
+  },
+  {
+    category: "AE",
+    question: "Which system monitors tire pressure?",
+    correctOptionId: 2,
+    options: ["ABS", "TPMS", "ESP", "TCS"],
+  },
+  {
+    category: "AE",
+    question: "What is regenerative braking?",
+    correctOptionId: 3,
+    options: ["Brake assist", "Emergency braking", "Energy recovery during braking", "Automatic braking"],
+  },
+  {
+    category: "AE",
+    question: "Which fuel system delivers precise fuel amounts?",
+    correctOptionId: 4,
+    options: ["Carburetor", "TBI", "MPFI", "Direct injection"],
+  },
+
+  // Civil Engineering (CE) - 20 more questions
+  {
+    category: "CE",
+    question: "What is the safe bearing capacity of soft soil?",
+    correctOptionId: 1,
+    options: ["50-100 kN/m²", "200-300 kN/m²", "400-500 kN/m²", "600-700 kN/m²"],
+  },
+  {
+    category: "CE",
+    question: "Which cement sets quickly?",
+    correctOptionId: 2,
+    options: ["OPC", "Rapid hardening cement", "PPC", "White cement"],
+  },
+  {
+    category: "CE",
+    question: "What is the unit weight of plain concrete?",
+    correctOptionId: 3,
+    options: ["20 kN/m³", "22 kN/m³", "24 kN/m³", "26 kN/m³"],
+  },
+  {
+    category: "CE",
+    question: "Which test determines workability of fresh concrete?",
+    correctOptionId: 4,
+    options: ["Compression test", "Tensile test", "Rebound test", "Slump test"],
+  },
+  {
+    category: "CE",
+    question: "What is the nominal cover for beams?",
+    correctOptionId: 1,
+    options: ["25mm", "40mm", "50mm", "75mm"],
+  },
+  {
+    category: "CE",
+    question: "Which IS code is for plain and reinforced concrete?",
+    correctOptionId: 2,
+    options: ["IS 875", "IS 456", "IS 800", "IS 1893"],
+  },
+  {
+    category: "CE",
+    question: "What is the minimum grade of concrete for RCC in seawater?",
+    correctOptionId: 3,
+    options: ["M20", "M25", "M30", "M35"],
+  },
+  {
+    category: "CE",
+    question: "Which foundation is used for weak soil?",
+    correctOptionId: 4,
+    options: ["Isolated footing", "Combined footing", "Strip footing", "Pile foundation"],
+  },
+  {
+    category: "CE",
+    question: "What is the standard consistency of cement?",
+    correctOptionId: 1,
+    options: ["25-35%", "40-50%", "50-60%", "60-70%"],
+  },
+  {
+    category: "CE",
+    question: "Which material is added to make concrete waterproof?",
+    correctOptionId: 2,
+    options: ["Sand", "Admixture", "Gravel", "Cement"],
+  },
+  {
+    category: "CE",
+    question: "What is the purpose of curing concrete?",
+    correctOptionId: 3,
+    options: ["Increase strength immediately", "Reduce cost", "Hydration and strength development", "Improve appearance"],
+  },
+  {
+    category: "CE",
+    question: "Which type of bond is strongest in brickwork?",
+    correctOptionId: 4,
+    options: ["Stretcher bond", "Header bond", "Flemish bond", "English bond"],
+  },
+  {
+    category: "CE",
+    question: "What is the live load for residential buildings?",
+    correctOptionId: 1,
+    options: ["2 kN/m²", "4 kN/m²", "6 kN/m²", "8 kN/m²"],
+  },
+  {
+    category: "CE",
+    question: "Which steel is used for reinforcement?",
+    correctOptionId: 2,
+    options: ["Mild steel", "TMT bars", "Cast iron", "Stainless steel"],
+  },
+  {
+    category: "CE",
+    question: "What is the purpose of plinth beam?",
+    correctOptionId: 3,
+    options: ["Support roof", "Carry floor load", "Tie columns at plinth level", "Provide ventilation"],
+  },
+  {
+    category: "CE",
+    question: "Which test checks soundness of cement?",
+    correctOptionId: 4,
+    options: ["Slump test", "Compression test", "Consistency test", "Le Chatelier test"],
+  },
+  {
+    category: "CE",
+    question: "What is the maximum aggregate size for reinforced concrete?",
+    correctOptionId: 1,
+    options: ["20mm", "40mm", "60mm", "80mm"],
+  },
+  {
+    category: "CE",
+    question: "Which surveying method uses GPS?",
+    correctOptionId: 2,
+    options: ["Chain surveying", "Satellite surveying", "Plane table surveying", "Compass surveying"],
+  },
+  {
+    category: "CE",
+    question: "What is the typical thickness of brick wall?",
+    correctOptionId: 3,
+    options: ["100mm", "150mm", "230mm", "300mm"],
+  },
+  {
+    category: "CE",
+    question: "Which cement is best for mass concreting?",
+    correctOptionId: 4,
+    options: ["Rapid hardening", "White cement", "Sulphate resistant", "Low heat cement"],
+  },
+
+  // Mechanical and Automation (MN) - 20 more questions
+  {
+    category: "MN",
+    question: "What does HMI stand for in automation?",
+    correctOptionId: 1,
+    options: ["Human Machine Interface", "High Modulation Interface", "Hybrid Motor Integration", "Hardware Monitoring Interface"],
+  },
+  {
+    category: "MN",
+    question: "Which communication protocol uses master-slave architecture?",
+    correctOptionId: 2,
+    options: ["Ethernet", "Modbus", "Wi-Fi", "Bluetooth"],
+  },
+  {
+    category: "MN",
+    question: "What is the purpose of an encoder?",
+    correctOptionId: 3,
+    options: ["Generate power", "Store data", "Measure position/speed", "Control temperature"],
+  },
+  {
+    category: "MN",
+    question: "Which robot configuration has the most flexibility?",
+    correctOptionId: 4,
+    options: ["Cartesian", "Cylindrical", "SCARA", "Articulated"],
+  },
+  {
+    category: "MN",
+    question: "What does DCS stand for?",
+    correctOptionId: 1,
+    options: ["Distributed Control System", "Digital Control Station", "Direct Current Supply", "Data Collection System"],
+  },
+  {
+    category: "MN",
+    question: "Which sensor detects position without contact?",
+    correctOptionId: 2,
+    options: ["Limit switch", "Hall effect sensor", "Push button", "Relay"],
+  },
+  {
+    category: "MN",
+    question: "What is the function of VFD?",
+    correctOptionId: 3,
+    options: ["Measure voltage", "Store energy", "Control motor speed", "Generate signals"],
+  },
+  {
+    category: "MN",
+    question: "Which programming language is used for PLCs?",
+    correctOptionId: 4,
+    options: ["Python", "Java", "C++", "Ladder Logic"],
+  },
+  {
+    category: "MN",
+    question: "What is Industry 4.0?",
+    correctOptionId: 1,
+    options: ["Fourth industrial revolution", "Fourth version of PLC", "Industrial protocol", "Safety standard"],
+  },
+  {
+    category: "MN",
+    question: "Which actuator provides linear motion?",
+    correctOptionId: 2,
+    options: ["Rotary actuator", "Pneumatic cylinder", "Servo motor", "Stepper motor"],
+  },
+  {
+    category: "MN",
+    question: "What does AGV stand for?",
+    correctOptionId: 3,
+    options: ["Automatic Gear Vehicle", "Advanced Guided Vehicle", "Automated Guided Vehicle", "Artificial Ground Vehicle"],
+  },
+  {
+    category: "MN",
+    question: "Which control mode maintains constant output?",
+    correctOptionId: 4,
+    options: ["Proportional", "Integral", "Derivative", "On-Off"],
+  },
+  {
+    category: "MN",
+    question: "What is the purpose of SCADA?",
+    correctOptionId: 1,
+    options: ["Monitor and control processes", "Program robots", "Design circuits", "Test sensors"],
+  },
+  {
+    category: "MN",
+    question: "Which sensor measures angular velocity?",
+    correctOptionId: 2,
+    options: ["Accelerometer", "Gyroscope", "Thermometer", "Barometer"],
+  },
+  {
+    category: "MN",
+    question: "What is the advantage of closed-loop control?",
+    correctOptionId: 3,
+    options: ["Lower cost", "Simpler design", "Better accuracy", "Faster response"],
+  },
+  {
+    category: "MN",
+    question: "Which network topology is most reliable?",
+    correctOptionId: 4,
+    options: ["Star", "Bus", "Ring", "Mesh"],
+  },
+  {
+    category: "MN",
+    question: "What does RTU stand for in SCADA?",
+    correctOptionId: 1,
+    options: ["Remote Terminal Unit", "Real Time Unit", "Rapid Transfer Unit", "Relay Timing Unit"],
+  },
+  {
+    category: "MN",
+    question: "Which motor provides precise position control?",
+    correctOptionId: 2,
+    options: ["AC induction motor", "Stepper motor", "Universal motor", "Shaded pole motor"],
+  },
+  {
+    category: "MN",
+    question: "What is machine vision used for?",
+    correctOptionId: 3,
+    options: ["Power generation", "Data storage", "Quality inspection", "Temperature control"],
+  },
+  {
+    category: "MN",
+    question: "Which protocol is used for Ethernet-based automation?",
+    correctOptionId: 4,
+    options: ["RS-232", "RS-485", "Modbus RTU", "Ethernet/IP"],
+  },
+];
+
+  // Create all regular questions
   for (const q of regularQuestions) {
     await prisma.question.create({
       data: {
