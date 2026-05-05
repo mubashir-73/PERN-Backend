@@ -2,7 +2,7 @@
 
 A production-ready backend API built with the **PERN Stack** (PostgreSQL, Express/Fastify, React, Node.js). This project implements a comprehensive test management and student assessment platform with OAuth integration, role-based access control, and comprehensive database management.
 
-Currently deployed on **Vercel** with backend on render and database as render postgresql (previously on VPS with Docker orchestration). 
+Currently deployed on render and database as render postgresql (previously on VPS with Docker orchestration). 
 
 ---
 
