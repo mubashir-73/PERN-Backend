@@ -33,6 +33,23 @@ Currently deployed on render and database as render postgresql (previously on VP
 
 ---
 
+## 🔐 Testing Credentials
+
+To access the application and explore its features, you can use the following test credentials:
+
+### Admin Access
+* **Name:** `foreseadmin`
+* **Email:** `admin@forese.co.in`
+* **Password:** `forese2026@Mocks`
+
+### User Access
+* **Name:** *(Feel free to use any name)*
+* **Email:** Must follow the university email pattern: `2023CS[any 4-digit number]@svce.ac.in` 
+  * *Example:* `2023CS0091@svce.ac.in`
+* **Session Code:** You can set or change the session code from within the Admin Panel.
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology | Version |
@@ -532,4 +549,4 @@ For issues and questions:
 ---
 
 **Last Updated:** May 4, 2026  
-**Status:** Active (Deployed on Vercel)
+**Status:** Active (Backend Deployed on Render, Database on Neon and frontend in Vercel)
